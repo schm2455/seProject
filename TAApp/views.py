@@ -3,7 +3,7 @@ from django.views import View
 from TAApp.models import MyUser
 
 
-class Home(View):
+class Login(View):
     def get(self, request):
         return render(request, "login.html", {})
 
