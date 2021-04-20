@@ -1,5 +1,5 @@
 """
-ASGI config for seProject project.
+ASGI config for TAScheduler project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
