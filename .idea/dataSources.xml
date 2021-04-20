@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:C:\Users\trevo\PycharmProjects\seProject\db.sqlite3</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="db [2]" uuid="cc726cc0-5364-4221-aeda-9f88d7194db7">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\seProject\db.sqlite3</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

@@ -14,3 +14,4 @@ class TestLogin(TestCase):
     def test_existing_user(self):
         response = self.client.post("/login/", {"name":"admin", "password":"anotherPassword"})
         self.assertFalse(response.context['password'], "incorrect", "The password for admin is admin, not anotherPassword")
+
