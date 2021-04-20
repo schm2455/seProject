@@ -5,7 +5,7 @@ from TAApp.models import MyUser
 
 class Home(View):
     def get(self, request):
-        return render(request, "home.html", {})
+        return render(request, "login.html", {})
 
     def post(self, request):
         noSuchUser = False
@@ -21,7 +21,7 @@ class Home(View):
             request.session["name"] = m.name
             return redirect("/things/")
         elif badPassword:
-            return render(request, "home.html", {"message": "bad password"})
+            return render(request, "login.html", {"message": "bad password"})
         else:
             request.session["name"] = m.name
             return redirect("/things/")
