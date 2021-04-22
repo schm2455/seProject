@@ -1,3 +1,47 @@
-h1 {
-    color : blue;
+.login {
+	background-color: transparent;
+	background-image: url('../images/background.png');
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	background-position: -4px -200px;
 }
+
+input[type=button], input[type=submit] {
+	box-shadow:inset 0px 1px 0px 0px #f9eca0;
+	background:linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+	background-color:#f0c911;
+	border-radius:6px;
+	border:1px solid #e65f44;
+	display:inline-block;
+	cursor:pointer;
+	color:#c92200;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #ded17c;
+	margin: 0 auto;
+    display: block;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+	background-color:#f2ab1e;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+.center, h1 {
+	text-align: center;
+	margin-left:auto;
+    margin-right:auto;
+}
+#bg{
+    background-size: 1800px 900px;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: fixed;
+}
+
