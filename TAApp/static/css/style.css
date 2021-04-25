@@ -1,10 +1,4 @@
-.login {
-	background-color: transparent;
-	background-image: url('../images/background.png');
-	background-repeat: no-repeat;
-	background-attachment: scroll;
-	background-position: -4px -200px;
-}
+
 
 input[type=button], input[type=submit] {
 	box-shadow:inset 0px 1px 0px 0px #f9eca0;
@@ -38,10 +32,19 @@ input[type=button], input[type=submit] {
 	margin-left:auto;
     margin-right:auto;
 }
-#bg{
-    background-size: 1800px 900px;
-    background-repeat: no-repeat;
-    background-position: top;
-    background-attachment: fixed;
+body, html{
+  height: 100%;
+  margin: 0;
 }
 
+.bg {
+  background-image: url("../images/background.png");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.Header {
+    height: 100px;
+}

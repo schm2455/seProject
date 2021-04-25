@@ -5,22 +5,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home Page</title>
+    <title>TA Scheduler Login</title>
 </head>
 <body>
-<div id="logo">
-<img src="{% static 'images/logotransparent.png' %}"/>
-</div>
+<div class="bg"></div>
+    <div class="Header"></div>
 <h1>TA Scheduler</h1>
-<body id="bg" style="background-image: url('{% static "images/background.png"%}')";>
-
 <form action="/" method="post">
     {% csrf_token %}
     <table class ="center">
         <tr><td>name: </td><td><input type="text" name="name"></td></tr>
         <tr><td>password: </td><td><input type="password" name="password"></td></tr>
-    </table>
-    <input type="submit">
+</table>
+                <form action= admin_home.html>
+        <input type="submit">
+        </form>
 </form>
 {{ message }}
 </body>

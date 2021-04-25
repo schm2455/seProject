@@ -7,6 +7,11 @@ class Login(View):
     def get(self, request):
         return render(request, "login.html", {})
 
+
+class Admin_home(View):
+    def get(self, request):
+        return render(request, "admin_home.html", {})
+
     def post(self, request):
         noSuchUser = False
         badPassword = False
