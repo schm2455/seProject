@@ -1,6 +1,6 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +8,7 @@
     <title>TA Scheduler Login</title>
 </head>
 <body>
-<div class="bg"></div>
+<div class="bg">
     <div class="Header"></div>
 <h1>TA Scheduler</h1>
 <form action="/" method="post">
@@ -17,10 +17,10 @@
         <tr><td>name: </td><td><input type="text" name="name"></td></tr>
         <tr><td>password: </td><td><input type="password" name="password"></td></tr>
 </table>
-                <form action= admin_home.html>
+
         <input type="submit">
-        </form>
 </form>
 {{ message }}
+</div>
 </body>
 </html>
