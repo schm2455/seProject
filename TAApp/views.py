@@ -14,3 +14,7 @@ class Login(View):
 class Admin_home(View):
     def get(self, request):
         return render(request, "admin_home.html", {})
+
+class Courses(View):
+    def get(self, request):
+        return render(request, "courses.html", {})

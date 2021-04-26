@@ -1,0 +1,25 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}"/>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="bg">
+        <div style="padding-top:170px;margin:0 auto;text-align: center;">
+                Add a Course
+            <form action="/" method="post">
+                {% csrf_token %}
+                <input type="text" name="name" style="display:inline"><button style="display:inline"><i class="fa fa-plus"></i></button>
+            </form>
+
+        </div>
+    </div>
+</body>
+</html>
