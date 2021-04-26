@@ -18,12 +18,12 @@ from django.urls import path
 
 from TAApp import views
 from TAApp.views import Login, Admin_home
-from TAApp.views import Login, Admin_home, Courses
+from TAApp.views import Login, Admin_home, Courses, Register
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Login.as_view()),
     path('admin_home/', Admin_home.as_view()),
     path('courses/', Courses.as_view()),
-    path("register.html/", views.register, name="register")
+    path('register/', Register.as_view()),
 ]

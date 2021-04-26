@@ -21,5 +21,4 @@ from TAApp.views import Home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Home.as_view()),
-    path("register.html/", views.register, name="register")
 ]

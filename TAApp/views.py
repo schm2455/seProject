@@ -18,3 +18,7 @@ class Admin_home(View):
 class Courses(View):
     def get(self, request):
         return render(request, "courses.html", {})
+
+class Register(View):
+    def get(self, request):
+        return render(request, "register.html", {})
