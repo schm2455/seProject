@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+
+from TAApp import views
 from TAApp.views import Home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Home.as_view()),
+    path("register.html/", views.register, name="register")
 ]
