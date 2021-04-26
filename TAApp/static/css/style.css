@@ -58,7 +58,10 @@ body, html{
 .column_right{ float: right; width: 33.333%; }
 .column_center{ display: inline-block; width: 33.333%; }
 
-#TAs,#Courses,#Assignments {
+.column_right_half{ float: right; width: 50%; }
+.column_left_half{ display: inline-block; width: 50%; }
+
+#TAs,#Courses,#Assignments,#labs {
 	background-color: white;
 	width: 200px;
 	height: 150px;

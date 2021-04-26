@@ -1,0 +1,40 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<div class="bg">
+    <div class="HeaderHome"></div>
+<h1 class="home">TA Homepage</h1>
+  <div class="column_right_half">
+        <div class="Left">
+      <h2>Labs:</h2>
+      <form action="/TA_home/"  id = "Labs" method="post">
+    {% csrf_token %}
+      <div id="LabList">
+    {% for i in labs %}
+    {{ i }}<br/>
+    {% endfor %}
+      </div>
+</form>
+  </div>
+  </div>
+  <div class="column_right">
+            <h2>Assignments:</h2>
+      <form action="/TA_home/"  id = "Assignments" method="post">
+    {% csrf_token %}
+      <div id="AssignmentList">
+    {% for i in Assignments %}
+    {{ i }}<br/>
+    {% endfor %}
+      </div>
+</form>
+</div>
+</div>
+</body>
+</html>
