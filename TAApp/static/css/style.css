@@ -51,7 +51,26 @@ body, html{
 .Header {
     height: 100px;
 }
-
+.left {
+    padding-left: 125px;
+}
 .column_left{ float: left; width: 33.333%; }
 .column_right{ float: right; width: 33.333%; }
 .column_center{ display: inline-block; width: 33.333%; }
+
+#TAs,#Courses,#Assignments {
+	background-color: white;
+	width: 200px;
+	height: 150px;
+	border: 2px solid black;
+	padding: 50px;
+	margin: 20px;
+}
+
+.home{
+	color: white;
+}
+
+.HeaderHome {
+    height: 5px;
+}
