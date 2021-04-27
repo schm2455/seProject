@@ -22,3 +22,9 @@ class Courses(View):
 class Register(View):
     def get(self, request):
         return render(request, "register.html", {})
+
+    def post(self, request):
+        m = MyUser
+        m.save()
+        request.session['name'] = m.name
+        return redirect('/admin_home/')
