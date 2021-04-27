@@ -44,3 +44,4 @@ class Lab(models.Model):
     project_manager = models.ForeignKey(Instructor, on_delete=models.CASCADE, null=True, blank=True, default="")
     labTA = models.ManyToManyField(TA)
     labForCourse = models.ManyToManyField(Course)
+
