@@ -24,7 +24,5 @@ class Register(View):
         return render(request, "register.html", {})
 
     def post(self, request):
-        m = MyUser
-        m.save()
-        request.session['name'] = m.name
+
         return redirect('/admin_home/')
