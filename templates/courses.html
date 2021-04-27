@@ -14,7 +14,7 @@
     <div class="bg">
         <div style="padding-top:170px;margin:0 auto;text-align: center;">
                 Add a Course
-            <form action="/" method="post">
+            <form action="/courses/" method="post">
                 {% csrf_token %}
                 Course Name:<input type="text" name="name" style="display:inline">
                 <button style="display:block;margin:auto;width:100px;margin-top:5px "><i class="fa fa-plus"></i> Add Course</button>
