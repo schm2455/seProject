@@ -6,21 +6,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
-    <form action="/admin_home/" method="post"></form>
 </head>
 <body>
 <div class="bg">
-    <div class="Header"></div>
-<h1>Admin Homepage</h1>
+    <div class="HeaderHome"></div>
+<h1 class="home">Admin Homepage</h1>
   <div class="column_left">
-          <input type="submit">
+      <div class="Left">
+      <div class="left">
+      <h2>TA's:</h2>
+      <form action="/admin_home/"  id = "TAs" method="post">
+    {% csrf_token %}
+      <div id="TAList">
+    {% for i in tas %}
+    {{ i }}<br/>
+    {% endfor %}
+      </div>
+</form>
+      TA:<input type="text" name="TA" required minlength="4" maxlength="20" size="20">
+          <input type="submit"
+            value="Add">
+  </div>
+  </div>
   </div>
   <div class="column_center">
-          <input type="submit">
+        <div class="Left">
+      <h2>Courses:</h2>
+      <form action="/admin_home/"  id = "Courses" method="post">
+    {% csrf_token %}
+      <div id="CourseList">
+    {% for i in courses %}
+    {{ i }}<br/>
+    {% endfor %}
+      </div>
+</form>
+      Course:<input type="text" name="course" required minlength="3" maxlength="20" size="20">
+          <input type="submit"
+            value ="Add">
   </div>
-  <div class="column_right" style="text-align:center">
-          <input type="submit">
-      <a href="/courses/">Add A Course</a>
+  </div>
+  <div class="column_right">
+            <h2>Assignments:</h2>
+      <form action="/admin_home/"  id = "Assignments" method="post">
+    {% csrf_token %}
+      <div id="AssignmentList">
+    {% for i in assignments %}
+    {{ i }}<br/>
+    {% endfor %}
+      </div>
+</form>
+      Assignment:<input type="text" name="assignment" required minlength="4" maxlength="20" size="20">
+          <input type="submit"
+            value="Add">
 </div>
 </div>
 </body>
