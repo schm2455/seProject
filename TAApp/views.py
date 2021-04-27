@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from TAApp.models import MyUser, Administrator
+from TAApp.models import MyUser, Course, TA, Administrator
 
 
 class Login(View):
@@ -30,6 +30,14 @@ class Login(View):
 class Admin_home(View):
     def get(self, request):
         return render(request, "admin_home.html", {})
+
+    def post(self, request):
+        if request.method == 'POST' and 'TA' in request.post:
+            tName = request.POST.get('TA', '')
+            newTA = TA(name=tName, project_manager='Admin')
+            newTA.save()
+        tas = list(map(str, TA.objects.filter(name='Admin')))
+        return render(request, "admin_home.html", {'name': tName, 'tas': tas})
 
 
 class Courses(View):
