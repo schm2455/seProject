@@ -35,13 +35,12 @@ class Course(models.Model):
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=50)
     project_manager = models.ForeignKey(Administrator, on_delete=models.CASCADE, null=True, blank=True, default="")
-    instructor = models.ManyToManyField(Instructor)
-    instructorTA = models.ManyToManyField(TA)
+    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
+    instructorTA = models.ForeignKey(TA, on_delete=models.CASCADE)
 
 class Lab(models.Model):
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=50)
     project_manager = models.ForeignKey(Instructor, on_delete=models.CASCADE, null=True, blank=True, default="")
-    labTA = models.ManyToManyField(TA)
-    labForCourse = models.ManyToManyField(Course)
-
+    labTA = models.ForeignKey(TA, on_delete=models.CASCADE)
+    labForCourse = models.ForeignKey(Course, on_delete=models.CASCADE)
