@@ -17,6 +17,8 @@ class Login(View):
             noSuchUser = True
         if request.POST['name'] == "Admin" and request.POST['password'] == "Admin":
             return redirect("/admin_home/")
+        if request.POST['name'] == "Admin" and request.POST['password'] != "Admin":
+            return render(request, "login.html", {"message": "bad password"})
         elif noSuchUser:
             return render(request, "login.html", {"message": "No such user."})
         elif badPassword:
