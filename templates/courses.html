@@ -16,7 +16,10 @@
                 Add a Course
             <form action="/" method="post">
                 {% csrf_token %}
-                Course Name:<input type="text" name="name" style="display:inline">
+                <p>Course Name:<input type="text" name="name" style="display:inline"> Instructor:<input type="text" name="instructor" style="display:inline"></p>
+                <p>TA:<input type="text" name="instructorTA" style="display:inline"></p>
+                <p style="margin-bottom:0">Course Description</p>
+                <p style="margin-top:0"><textarea name="description" style="width:500px;height:100px;margin-top:0px"></textarea></p>
                 <button style="display:block;margin:auto;width:100px;margin-top:5px "><i class="fa fa-plus"></i> Add Course</button>
             </form>
         <a href="/admin_home/">Go Back</a>
