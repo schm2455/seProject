@@ -15,10 +15,19 @@
             <tr><td><label for="password"><b>Password</b></label></td></tr>
             <tr><td><input type="password" placeholder="Enter password" name="password" required></td></tr>
 
+                <label for="job">Assignment:</label>
+                    <select id="job" name="job">
+                        <option value="Select...">Select...</option>
+                        <option value="TA">TA</option>
+                        <option value="Instructor">Instructor</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+
+
         </table>
         <input type ="submit">
     </form>
     </div>
-
+<div class ="center">{{ message }}</div>
 </body>
 </html>
