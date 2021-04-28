@@ -32,12 +32,22 @@ class Admin_home(View):
         return render(request, "admin_home.html", {})
 
     def post(self, request):
-        if request.method == 'POST' and 'TA' in request.post:
+        #if info is passed into the add TA section
+        if request.method == 'POST' and 'TA' in request.POST:
             tName = request.POST.get('TA', '')
-            newTA = TA(name=tName, project_manager='Admin')
+            newTA = TA(name=tName, project_manager=self.__str__())
             newTA.save()
-        tas = list(map(str, TA.objects.filter(name='Admin')))
-        return render(request, "admin_home.html", {'name': tName, 'tas': tas})
+            tas = list(map(str, TA.objects.filter(name=self.__str__())))
+            return render(request, "admin_home.html", {'name': tName, 'tas': tas})
+
+        #If info is passed into the add course section
+        elif request.method =='POST' and 'course' in request.POST:
+            cName = request.POST.get('course', '')
+            newCourse = Course(name=cName, project_manager=self.__str__())
+            newCourse.save()
+            courses = list(map(str, Course.objects.filter(name=self.__str__())))
+            return render(request, "admin_home.html", {'name': cName, 'courses': courses})
+
 
 
 class Courses(View):
@@ -49,10 +59,11 @@ class Register(View):
     def get(self, request):
         return render(request, "register.html", {})
 
+    def post(self, request):
+        return redirect('/admin_home/')
+
 
 class TA_home(View):
     def get(self, request):
         return render(request, "TA_home.html", {})
-    def post(self, request):
 
-        return redirect('/admin_home/')
