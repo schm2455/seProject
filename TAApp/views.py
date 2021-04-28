@@ -64,13 +64,14 @@ class Register(View):
         newUser = request.POST['name']
         newUserPass = request.POST['password']
         userWork = request.POST['job']
+        if not MyUser.objects.filter(name=request.POST['name']).exists():
+            if userWork != 'Select...':
+                MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
 
-        if userWork != 'Select...':
-            MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
-
+            else:
+                return render(request, "register.html", {"message": "Please try again!"})
         else:
-            return render(request, "register.html", {"message": "Please try again!"})
-
+            return render(request, "register.html", {"message": "Duplicate user"})
         print("Successfully added!")
         return render(request, "login.html", {"message": "Success!"})
 
