@@ -13,6 +13,7 @@ class Login(View):
         try:
             m = MyUser.objects.get(name=request.POST['name'])
             badPassword = (m.password != request.POST['password'])
+
         except:
             noSuchUser = True
         if request.POST['name'] == "Admin" and request.POST['password'] == "Admin":
