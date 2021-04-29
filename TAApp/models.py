@@ -16,7 +16,7 @@ class MyUser(models.Model):
 class Administrator(models.Model):
     name = models.CharField(max_length=20, null=True)
     password = models.CharField(max_length=20, null=True)
-    role = models.CharField(max_length=20, null=True)
+    role = "Admin"
 
     def __str__(self):
         return self.name
