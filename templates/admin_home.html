@@ -23,7 +23,7 @@
       <form action="/admin_home/"  id = "TAs" method="post">
     {% csrf_token %}
       <div id="TAList">
-    {% for i in tas %}
+    {% for i in TAs %}
     {{ i }}<br/>
     {% endfor %}
       </div>

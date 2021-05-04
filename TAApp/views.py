@@ -15,13 +15,13 @@ class Login(View):
 
             if user.password == request.POST['password']:
                 if user.role == "Admin":
-                    return render(request, 'admin_home.html')
+                    return redirect('/admin_home/')
                 elif user.role == "Instructor":
-                    return render(request, 'admin_home.html')
+                    return redirect('/Instructor_home')
                 elif user.role == "TA":
-                    return render(request, 'TA_home.html')
+                    return redirect('/TA_home/')
                 else:
-                    return render(request, 'admin_home.html')
+                    return redirect('/admin_home/')
             else:
                 return render(request, 'login.html', {"message": "Bad Password"})
         else:
@@ -30,7 +30,9 @@ class Login(View):
 
 class Admin_home(View):
     def get(self, request):
-        return render(request, "admin_home.html", {})
+        TAList = list(map(str, TA.objects.all()))
+        InstructorList = list(map(str, Instructor.objects.all()))
+        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList})
 
 
 class Courses(View):
@@ -78,7 +80,7 @@ class Register(View):
 
 class CreateTA(View):
     def get(self, request):
-        return render(request, "TAs.html",)
+        return render(request, "TAs.html", )
 
     def post(self, request):
         taname = request.POST.get('name')
@@ -101,6 +103,15 @@ class CreateTA(View):
             return render(request, 'admin_home.html', {"message": "Success!"})
 
 
+class TA_home(View):
+    def get(self, request):
+        return render(request, "TA_home.html", {})
+
+class Instructor_home(View):
+    def get(self, request):
+        return render(request, "Instructor_home.html", {})
+
+
 class CreateInstructor(View):
     def get(self, request):
         return render(request, "instructors.html", {})
@@ -111,7 +122,7 @@ class CreateInstructor(View):
         if instructorname is None:
             return render(request, "instructors.html", {"message": "Please fill all the boxes."})
         if Instructor.objects.filter(name=instructorname).exists():
-            return render(request, 'instructors.html',{"message": "instructor already exists"})
+            return render(request, 'instructors.html', {"message": "instructor already exists"})
         if not Administrator.objects.filter(name='Admin').exists():
             Administrator.objects.create(name="Admin", password="Admin")
         projManager = Administrator.objects.get(name="Admin")
