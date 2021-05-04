@@ -46,7 +46,7 @@ class Courses(View):
         if coursename is None or instructorname is None or taname is None or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
 
-        Courses.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
+        Course.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
         user = MyUser.role
         if user == "Admin":
             return render(request, 'admin_home.html', {"message": "Success!"})
@@ -78,15 +78,18 @@ class Register(View):
 
 class TA(View):
     def get(self, request):
-        return render(request, "TA_home.html", {})
+        return render(request, "TAs.html", {})
 
     def post(self, request):
-        return redirect('/admin_home/')
+        return redirect('/TA_home/')
 
+class TA_home(View):
+    def get(self, request):
+        return render(request, "TA_home.html", {})
 
 class Instructor(View):
     def get(self, request):
-        return render(request, "TA_home.html", {})
+        return render(request, "instructors.html", {})
 
     def post(self, request):
         return redirect('/admin_home/')

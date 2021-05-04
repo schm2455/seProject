@@ -27,9 +27,9 @@
     {% endfor %}
       </div>
 </form>
-      TA:<input type="text" name="TA" required minlength="4" maxlength="20" size="20">
-          <input type="submit"
-            value="Add">
+        <form action ="/TAs/">
+          <input type="submit" value="Add">
+        </form>
   </div>
   </div>
   </div>
@@ -46,9 +46,9 @@
 
 </form>
 
-      Course:<input type="text" name="course" required minlength="3" maxlength="20" size="20">
-          <input type="submit"
-            value ="Add">
+        <form action ="/instructors/">
+          <input type="submit" value="Add">
+        </form>
   </div>
   </div>
   <div class="column_right">
@@ -61,7 +61,6 @@
     {% endfor %}
       </div>
 </form>
-      Assignment:<input type="text" name="assignment" required minlength="4" maxlength="20" size="20">
           <input type="submit"
             value="Add">
    <div class ="center">{{ message }}</div>
