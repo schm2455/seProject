@@ -43,7 +43,9 @@
     {{ i }}<br/>
     {% endfor %}
       </div>
+
 </form>
+
       Course:<input type="text" name="course" required minlength="3" maxlength="20" size="20">
           <input type="submit"
             value ="Add">
@@ -62,6 +64,7 @@
       Assignment:<input type="text" name="assignment" required minlength="4" maxlength="20" size="20">
           <input type="submit"
             value="Add">
+   <div class ="center">{{ message }}</div>
 </div>
 </div>
 </body>

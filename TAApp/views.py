@@ -15,8 +15,7 @@ class Login(View):
 
             if user.password == request.POST['password']:
                 if user.role == "Admin":
-                    request.session["name"] = user.name
-                    return render('admin_home.html')
+                    return render(request, 'admin_home.html')
                 elif user.role == "Instructor":
                     return render(request, 'admin_home.html')
                 elif user.role == "TA":
@@ -32,55 +31,6 @@ class Login(View):
 class Admin_home(View):
     def get(self, request):
         return render(request, "admin_home.html", {})
-    def post(self,request):
-        pass
-
-
-class TAs(View):
-    def get(self, request):
-        tas=list(map(str, TA.objects.all()))
-        return render(request, "TAs.html", {"tas":tas})
-
-    def post(self, request):
-        taname = request.POST.get('name')
-        instructorname = request.POST.get('instructor')
-
-        if instructorname is None or taname is None:
-            return render(request, "TAs.html", {"message": "Please fill all the boxes."})
-        if TA.objects.filter(name=taname).exists():
-            return render(request, 'TAs.html', {"message": "TA already exists"})
-
-        if not Instructor.objects.filter(name=instructorname).exists():
-            return render(request, 'TAs.html', {"message": "Instructor does not exist"})
-        t=TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
-        t.save()
-        tas = list(map(str, TA.objects.all()))
-        user = MyUser.role
-        if user == "Admin":
-            return render(request, 'admin_home.html', {"message": "Success!","tas":tas})
-        elif user == "Instructor":
-            return render(request, 'admin_home.html', {"message": "Success!"})
-        else:
-            return render(request, 'admin_home.html', {"message": "Success!"})
-
-
-class Instructors(View):
-    def get(self, request):
-        return render(request, "instructors.html", {})
-
-    def post(self, request):
-        instructorname = request.POST.get('instructor')
-
-        if instructorname is None:
-            return render(request, "instructors.html", {"message": "Please fill all the boxes."})
-        if Instructor.objects.filter(name=instructorname).exists():
-            return render(request, 'instructors.html',{"message": "instructor already exists"})
-        if not Administrator.objects.filter(name='Admin').exists():
-            Administrator.objects.create(name="Admin", password="Admin")
-        projManager = Administrator.objects.get(name="Admin")
-        n=Instructor.objects.create(name=instructorname, project_manager=projManager)
-        n.save()
-        return render(request, 'admin_home.html', {"message": "Success!"})
 
 
 class Courses(View):
