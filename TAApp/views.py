@@ -49,7 +49,7 @@ class TAs(View):
 
         if not Instructor.objects.filter(name=instructorname).exists():
             return render(request, 'TAs.html', {"message": "Instructor does not exist"})
-        TA.objects.create(name=taname, project_manager=instructorname)
+        TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
         user = MyUser.role
         if user == "Admin":
             return render(request, 'admin_home.html', {"message": "Success!"})
@@ -57,6 +57,25 @@ class TAs(View):
             return render(request, 'admin_home.html', {"message": "Success!"})
         else:
             return render(request, 'admin_home.html', {"message": "Success!"})
+
+
+class Instructors(View):
+    def get(self, request):
+        return render(request, "instructors.html", {})
+
+    def post(self, request):
+        instructorname = request.POST.get('instructor')
+
+        if instructorname is None:
+            return render(request, "instructors.html", {"message": "Please fill all the boxes."})
+        if Instructor.objects.filter(name=instructorname).exists():
+            return render(request, 'instructors.html',{"message": "instructor already exists"})
+        if not Administrator.objects.filter(name='Admin').exists():
+            Administrator.objects.create(name="Admin", password="Admin")
+        projManager = Administrator.objects.get(name="Admin")
+        n=Instructor.objects.create(name=instructorname, project_manager=projManager)
+        n.save()
+        return render(request, 'admin_home.html', {"message": "Success!"})
 
 
 class Courses(View):

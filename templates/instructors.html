@@ -13,15 +13,16 @@
 <body>
     <div class="bg">
         <div style="padding-top:170px;margin:0 auto;text-align: center;">
-            <header style="font-size:40px;color:black">Add a TA</header>
-            <form action="/TAs/" method="post">
+            <header style="font-size:40px;color:black">Add an Instructor</header>
+            <form action="/instructors/" method="post">
                 {% csrf_token %}
-                <p>TA Name:<input type="text" name="name" style="display:inline"> Instructor:<input type="text" name="instructor" style="display:inline"></p>
+                <p> Instructor:<input type="text" name="instructor" style="display:inline"></p>
                 <input type="submit">
             </form>
             <div class ="center">{{ message }}</div>
-            <a href="/admin_home/">Go Back</a>
+        <a href="/admin_home/">Go Back</a>
         </div>
+
     </div>
 </body>
 </html>
