@@ -37,7 +37,7 @@ class Courses(View):
     def get(self, request):
         return render(request, "courses.html", {})
 
-    def push(self, request):
+    def post(self, request):
         coursename = request.POST['name']
         instructorname = request.POST['instructor']
         taname = request.POST['instructorTA']
