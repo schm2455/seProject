@@ -47,23 +47,24 @@
 
 </form>
 
-        <form action ="/instructors/">
+        <form action ="/courses/">
           <input type="submit" value="Add">
         </form>
   </div>
   </div>
   <div class="column_right">
-            <h2>Assignments:</h2>
-      <form action="/admin_home/"  id = "Assignments" method="post">
+            <h2>Instructors:</h2>
+      <form action="/admin_home/"  id = "Instructors" method="post">
     {% csrf_token %}
-      <div id="AssignmentList">
-    {% for i in assignments %}
+      <div id="InstructorList">
+    {% for i in instructors %}
     {{ i }}<br/>
     {% endfor %}
       </div>
 </form>
-          <input type="submit"
-            value="Add">
+              <form action ="/instructors/">
+          <input type="submit" value="Add">
+        </form>
    <div class ="center">{{ message }}</div>
 </div>
 </div>
