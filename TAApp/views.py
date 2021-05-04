@@ -16,7 +16,7 @@ class Login(View):
             if user.password == request.POST['password']:
                 if user.role == "Admin":
                     request.session["name"] = user.name
-                    return redirect('/admin_home/')
+                    return render('admin_home.html')
                 elif user.role == "Instructor":
                     return render(request, 'admin_home.html')
                 elif user.role == "TA":
@@ -32,21 +32,23 @@ class Login(View):
 class Admin_home(View):
     def get(self, request):
         return render(request, "admin_home.html", {})
+    def post(self,request):
+        pass
 
 
 class TAs(View):
     def get(self, request):
         return render(request, "TAs.html", {})
 
-    def push(self, request):
-        n = request.session["name"]
-        taname = request.POST.GET('name', '')
-        instructorname = request.POST.GET('instructor', '')
-
+    def post(self, request):
+        taname = request.POST.get('name')
+        instructorname = request.POST.get('instructor')
 
         if instructorname is None or taname is None:
-            return render(request, "courses.html", {"message": "Please fill all the boxes."})
+            return render(request, "TAs.html", {"message": "Please fill all the boxes."})
 
+        if not Instructor.objects.filter(name=instructorname).exists():
+            return render(request, 'TAs.html', {"message":"Instructor does not exist"})
         TA.objects.create(name=taname, project_manager=instructorname)
         user = MyUser.role
         if user == "Admin":
