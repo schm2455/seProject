@@ -38,7 +38,7 @@ class TA(models.Model):
         return self.name
 
 
-class Courses(models.Model):
+class Course(models.Model):
     name = models.CharField(max_length=20, null=True)
     description = models.CharField(max_length=50, null=True)
     project_manager = models.ForeignKey(Administrator, on_delete=models.CASCADE, null=True, blank=True, default="")
@@ -51,4 +51,4 @@ class Lab(models.Model):
     description = models.CharField(max_length=50, null=True)
     project_manager = models.ForeignKey(Instructor, on_delete=models.CASCADE, null=True, blank=True, default="")
     labTA = models.ForeignKey(TA, on_delete=models.CASCADE, default="")
-    labForCourse = models.ForeignKey(Courses, on_delete=models.CASCADE, default="")
+    labForCourse = models.ForeignKey(Course, on_delete=models.CASCADE, default="")
