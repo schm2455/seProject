@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.views import View
-from TAApp.models import MyUser, Administrator, Instructor, TA, Course
+from TAApp.models import MyUser, Administrator, Instructor, TA, Courses
 
 
 class Login(View):
@@ -30,27 +30,23 @@ class Login(View):
 
 class Admin_home(View):
     def get(self, request):
-        m = request.session["name"]
-        courses = list(map(str), Course.objects.filter())
-        tas = list(map(str), TA.objects.filter(owner__name=m))
-        return render(request, "admin_home.html", {"name": m, "Courses": courses, "TAList": tas, "AssignmentList": None})
+        return render(request, "admin_home.html", {})
 
 
 class Courses(View):
     def get(self, request):
         return render(request, "courses.html", {})
 
-    def post(self, request):
+    def push(self, request):
         coursename = request.POST['name']
-        teacher = request.POST['instructor']
-        TAman = request.POST['instructorTA']
+        instructorname = request.POST['instructor']
+        taname = request.POST['instructorTA']
         desc = request.POST['description']
 
-        if coursename is None or teacher is None or TAman is None or desc is None:
+        if coursename is None or instructorname is None or taname is None or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
 
-        Course.objects.create(name=coursename, description=desc, instructor=Instructor.objects.create(name=teacher),
-                              instructorTA=TA.objects.create(name=TAman))
+        Courses.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
         user = MyUser.role
         if user == "Admin":
             return render(request, 'admin_home.html', {"message": "Success!"})
@@ -71,7 +67,6 @@ class Register(View):
         if not MyUser.objects.filter(name=request.POST['name']).exists():
             if userWork != 'Select...':
                 MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
-                MyUser.save()
 
             else:
                 return render(request, "register.html", {"message": "Please try again!"})
