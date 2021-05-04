@@ -46,7 +46,7 @@ class Courses(View):
         if coursename is None or instructorname is None or taname is None or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
 
-        Courses.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
+        Course.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
         user = MyUser.role
         if user == "Admin":
             return render(request, 'admin_home.html', {"message": "Success!"})
@@ -78,15 +78,42 @@ class Register(View):
 
 class TA(View):
     def get(self, request):
-        return render(request, "TA_home.html", {})
+        return render(request, "TAs.html",)
 
     def post(self, request):
-        return redirect('/admin_home/')
+        taname = request.POST.get('name')
+        instructorname = request.POST.get('instructor')
+
+        if instructorname is None or taname is None:
+            return render(request, "TAs.html", {"message": "Please fill all the boxes."})
+        if TA.objects.filter(name=taname).exists():
+            return render(request, 'TAs.html', {"message": "TA already exists"})
+
+        if not Instructor.objects.filter(name=instructorname).exists():
+            return render(request, 'TAs.html', {"message": "Instructor does not exist"})
+        TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
+        user = MyUser.role
+        if user == "Admin":
+            return render(request, 'admin_home.html', {"message": "Success!"})
+        elif user == "Instructor":
+            return render(request, 'admin_home.html', {"message": "Success!"})
+        else:
+            return render(request, 'admin_home.html', {"message": "Success!"})
 
 
 class Instructor(View):
     def get(self, request):
-        return render(request, "TA_home.html", {})
+        return render(request, "instructors.html", {})
 
     def post(self, request):
-        return redirect('/admin_home/')
+        instructorname = request.POST.get('instructor')
+
+        if instructorname is None:
+            return render(request, "instructors.html", {"message": "Please fill all the boxes."})
+        if Instructor.objects.filter(name=instructorname).exists():
+            return render(request, 'instructors.html',{"message": "instructor already exists"})
+        if not Administrator.objects.filter(name='Admin').exists():
+            Administrator.objects.create(name="Admin", password="Admin")
+        projManager = Administrator.objects.get(name="Admin")
+        Instructor.objects.create(name=instructorname, project_manager=projManager)
+        return render(request, 'admin_home.html', {"message": "Success!"})
