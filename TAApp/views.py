@@ -33,7 +33,6 @@ class Instructors(View):
 
     def post(self, request):
         instructorname = request.POST.get('instructor')
-
         if instructorname is None:
             return render(request, "instructors.html", {"message": "Please fill all the boxes."})
         if Instructor.objects.filter(name=instructorname).exists():
