@@ -48,7 +48,7 @@ class TAs(View):
             return render(request, "TAs.html", {"message": "Please fill all the boxes."})
 
         if not Instructor.objects.filter(name=instructorname).exists():
-            return render(request, 'TAs.html', {"message":"Instructor does not exist"})
+            return render(request, 'TAs.html', {"message": "Instructor does not exist"})
         TA.objects.create(name=taname, project_manager=instructorname)
         user = MyUser.role
         if user == "Admin":
