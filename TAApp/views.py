@@ -76,7 +76,7 @@ class Register(View):
         return render(request, "login.html", {"message": "Success!"})
 
 
-class TA(View):
+class CreateTA(View):
     def get(self, request):
         return render(request, "TAs.html",)
 
@@ -101,7 +101,7 @@ class TA(View):
             return render(request, 'admin_home.html', {"message": "Success!"})
 
 
-class Instructor(View):
+class CreateInstructor(View):
     def get(self, request):
         return render(request, "instructors.html", {})
 
