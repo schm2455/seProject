@@ -76,9 +76,9 @@ class Register(View):
         return render(request, "login.html", {"message": "Success!"})
 
 
-class TA(View):
+class CreateTA(View):
     def get(self, request):
-        return render(request, "TAs.html", )
+        return render(request, "TAs.html",)
 
     def post(self, request):
         taname = request.POST.get('name')
@@ -101,12 +101,7 @@ class TA(View):
             return render(request, 'admin_home.html', {"message": "Success!"})
 
 
-class TA_home(View):
-    def get(self, request):
-        return render(request, "TA_home.html", {})
-
-
-class Instructor(View):
+class CreateInstructor(View):
     def get(self, request):
         return render(request, "instructors.html", {})
 
@@ -116,7 +111,7 @@ class Instructor(View):
         if instructorname is None:
             return render(request, "instructors.html", {"message": "Please fill all the boxes."})
         if Instructor.objects.filter(name=instructorname).exists():
-            return render(request, 'instructors.html', {"message": "instructor already exists"})
+            return render(request, 'instructors.html',{"message": "instructor already exists"})
         if not Administrator.objects.filter(name='Admin').exists():
             Administrator.objects.create(name="Admin", password="Admin")
         projManager = Administrator.objects.get(name="Admin")
