@@ -11,14 +11,14 @@
 <div class="bg">
     <div class="HeaderHome"></div>
 <h1 class="home">Admin Homepage</h1>
-    <br/><br/>
-    <a href="/login/">Logout</a>
+<a href="/login/">Logout</a>
+<a href="/instructors/">Create Instructor</a>
     <br/>
     <br/>
   <div class="column_left">
       <div class="Left">
       <div class="left">
-      <h2>TA's:</h2>
+      <h2><a href="TAs/">TA's:</a></h2>
       <form action="/admin_home/"  id = "TAs" method="post">
     {% csrf_token %}
       <div id="TAList">
@@ -27,6 +27,9 @@
     {% endfor %}
       </div>
 </form>
+      TA:<input type="text" name="TA" required minlength="4" maxlength="20" size="20">
+          <input type="submit"
+            value="Add">
   </div>
   </div>
   </div>
@@ -41,6 +44,9 @@
     {% endfor %}
       </div>
 </form>
+      Course:<input type="text" name="course" required minlength="3" maxlength="20" size="20">
+          <input type="submit"
+            value ="Add">
   </div>
   </div>
   <div class="column_right">
@@ -53,6 +59,9 @@
     {% endfor %}
       </div>
 </form>
+      Assignment:<input type="text" name="assignment" required minlength="4" maxlength="20" size="20">
+          <input type="submit"
+            value="Add">
 </div>
 </div>
 </body>
