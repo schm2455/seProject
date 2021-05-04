@@ -11,14 +11,15 @@
 <div class="bg">
     <div class="HeaderHome"></div>
 <h1 class="home">Admin Homepage</h1>
+<br/>
+<br/>
 <a href="/login/">Logout</a>
-<a href="/instructors/">Create Instructor</a>
     <br/>
     <br/>
   <div class="column_left">
       <div class="Left">
       <div class="left">
-      <h2><a href="TAs/">TA's:</a></h2>
+      <h2>TA's:</h2>
       <form action="/admin_home/"  id = "TAs" method="post">
     {% csrf_token %}
       <div id="TAList">
@@ -35,7 +36,7 @@
   </div>
   <div class="column_center">
         <div class="Left">
-            <h2><a href="/courses/">Courses:</a></h2>
+            <h2>Courses:</h2>
       <form action="/admin_home/"  id = "Courses" method="post">
     {% csrf_token %}
       <div id="CourseList">
