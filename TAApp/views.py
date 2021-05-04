@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.views import View
-from TAApp.models import MyUser, Administrator, Instructor, TA, Courses
+from TAApp.models import MyUser, Administrator, Instructor, TA, Course
 
 
 class Login(View):
@@ -76,7 +76,15 @@ class Register(View):
         return render(request, "login.html", {"message": "Success!"})
 
 
-class TA_home(View):
+class TA(View):
+    def get(self, request):
+        return render(request, "TA_home.html", {})
+
+    def post(self, request):
+        return redirect('/admin_home/')
+
+
+class Instructor(View):
     def get(self, request):
         return render(request, "TA_home.html", {})
 
