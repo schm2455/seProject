@@ -17,7 +17,7 @@ class Login(View):
                 if user.role == "Admin":
                     return redirect('/admin_home/')
                 elif user.role == "Instructor":
-                    return redirect('/Instructor_home')
+                    return redirect('/instructor_home')
                 elif user.role == "TA":
                     return redirect('/TA_home/')
                 else:
@@ -44,12 +44,13 @@ class Courses(View):
         instructorname = request.POST['instructor']
         taname = request.POST['instructorTA']
         desc = request.POST['description']
-
         if coursename is None or instructorname is None or taname is None or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
 
-        Course.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
-        user = MyUser.role
+        if Instructor.objects.filter(name=instructorname).exists():
+            instructorname = Instructor.objects.filter(name=instructorname)
+            Course.objects.create(name=coursename, description=desc, Instructor=instructorname, TA=taname)
+            user = MyUser.role
         if user == "Admin":
             return render(request, 'admin_home.html', {"message": "Success!"})
         elif user == "Instructor":
@@ -87,20 +88,16 @@ class CreateTA(View):
         instructorname = request.POST.get('instructor')
 
         if instructorname is None or taname is None:
-            return render(request, "TAs.html", {"message": "Please fill all the boxes."})
+            return redirect('/TAs/', {"message": "Please fill all the boxes."})
         if TA.objects.filter(name=taname).exists():
-            return render(request, 'TAs.html', {"message": "TA already exists"})
+            return redirect('/TAs/', {"message": "TA already exists"})
 
         if not Instructor.objects.filter(name=instructorname).exists():
-            return render(request, 'TAs.html', {"message": "Instructor does not exist"})
-        TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
-        user = MyUser.role
-        if user == "Admin":
-            return render(request, 'admin_home.html', {"message": "Success!"})
-        elif user == "Instructor":
-            return render(request, 'admin_home.html', {"message": "Success!"})
+            return redirect('/TAs/', {"message": "Instructor does not exist"})
         else:
-            return render(request, 'admin_home.html', {"message": "Success!"})
+            TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
+            user = MyUser.role
+            return redirect('/admin_home/', {"message": "Success!"})
 
 
 class TA_home(View):
