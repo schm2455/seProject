@@ -56,13 +56,7 @@ class Courses(View):
         instructor = Instructor.objects.get(name=instructorname)
         ta = TA.objects.get(name=taname)
 
-        ##will have to change later, adding an admin to test if adding courses works
-        if not Administrator.objects.filter(name=MyUser.name).exists:
-            admin=Administrator.objects.create(name="Admin", password="Admin")
-        admin = Administrator.objects.get(name="Admin")
-        ########
-
-        Course.objects.create(name=coursename, description=desc, project_manager=admin ,instructor=instructor, instructorTA=ta)
+        Course.objects.create(name=coursename, description=desc, instructor=instructor, instructorTA=ta)
         user = MyUser.role
         if user == "Admin":
             return render(request, 'admin_home.html', {"message": "Success!"})
