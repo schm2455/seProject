@@ -32,30 +32,36 @@ class Admin_home(View):
     def get(self, request):
         TAList = list(map(str, TA.objects.all()))
         InstructorList = list(map(str, Instructor.objects.all()))
-        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList})
+        CourseList = list(map(str, Course.objects.all()))
+
+        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList, "courses":CourseList})
 
 
 class Courses(View):
     def get(self, request):
-        return render(request, "courses.html", {})
+        instructors = list(map(str, Instructor.objects.all()))
+        tachoices = list(map(str, TA.objects.all()))
+        return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
 
     def post(self, request):
         coursename = request.POST['name']
-        instructorname = request.POST['instructor']
-        taname = request.POST['instructorTA']
+        instructorname = request.POST['instructorchoice']
+        taname = request.POST['tachoice']
         desc = request.POST['description']
+        instructorchoice = Instructor.objects.get(name=instructorname)
+        tachoice = TA.objects.get(name=taname)
 
-        if coursename is None or instructorname is None or taname is None or desc is None:
+        if coursename is None or instructorname == "Select..." or taname == "Select..." or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
 
-        Course.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
+        Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
         user = MyUser.role
         if user == "Admin":
-            return render(request, 'admin_home.html', {"message": "Success!"})
+            return redirect('/admin_home/', {"message": "Success!"})
         elif user == "Instructor":
-            return render(request, 'admin_home.html', {"message": "Success!"})
+            return redirect('/admin_home/', {"message": "Success!"})
         else:
-            return render(request, 'admin_home.html', {"message": "Success!"})
+            return redirect('/admin_home/', {"message": "Success!"})
 
 
 class Register(View):
@@ -69,7 +75,10 @@ class Register(View):
         if not MyUser.objects.filter(name=request.POST['name']).exists():
             if userWork != 'Select...':
                 MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
-
+                if userWork == "Instructor":
+                    Instructor.objects.create(name=newUser)
+                elif userWork == "TA":
+                    TA.objects.create(name=newUser)
             else:
                 return render(request, "register.html", {"message": "Please try again!"})
         else:
@@ -77,6 +86,13 @@ class Register(View):
         print("Successfully added!")
         return render(request, "login.html", {"message": "Success!"})
 
+class whatCourse(View):
+    def get(self,request):
+
+        return render(request, "thiscourse.html")
+
+    def post(self,request):
+        return None
 
 class CreateTA(View):
     def get(self, request):

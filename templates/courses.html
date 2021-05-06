@@ -16,8 +16,25 @@
             <header style="font-size:40px;color:black">Add a Course</header>
             <form action="/courses/" method="post">
                 {% csrf_token %}
-                <p>Course Name:<input type="text" name="name" style="display:inline"> Instructor:<input type="text" name="instructor" style="display:inline"></p>
-                <p>TA:<input type="text" name="instructorTA" style="display:inline"></p>
+                <p>Course Name:<input type="text" name="name" style="display:inline">
+                    <label for="instructorchoice">Instructor:</label>
+                    <select id="instructorchoice" name="instructorchoice">
+                    <option value="Select...">Select...</option>
+                        {% for i in instructors %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+
+                    </select>
+                </p>
+                <p>
+                    <label for="tachoice">TA:</label>
+                    <select id="tachoice" name="tachoice">
+                    <option value="Select...">Select...</option>
+                        {% for i in tachoices %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+
+                    </select>
                 <p style="margin-bottom:0">Course Description</p>
                 <p style="margin-top:0"><textarea name="description" style="width:500px;height:100px;margin-top:0px"></textarea></p>
 
