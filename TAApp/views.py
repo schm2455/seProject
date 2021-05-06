@@ -48,7 +48,21 @@ class Courses(View):
         if coursename is None or instructorname is None or taname is None or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
 
-        Course.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
+        if not Instructor.objects.filter(name=instructorname).exists():
+            return render(request, 'courses.html', {"message": "Instructor does not exist"})
+        if not TA.objects.filter(name=taname).exists():
+            return render(request, 'courses.html', {"message": "TA does not exist"})
+
+        instructor = Instructor.objects.get(name=instructorname)
+        ta = TA.objects.get(name=taname)
+
+        ##will have to change later, adding an admin to test if adding courses works
+        if not Administrator.objects.filter(name=MyUser.name).exists:
+            admin=Administrator.objects.create(name="Admin", password="Admin")
+        admin = Administrator.objects.get(name="Admin")
+        ########
+
+        Course.objects.create(name=coursename, description=desc, project_manager=admin ,instructor=instructor, instructorTA=ta)
         user = MyUser.role
         if user == "Admin":
             return render(request, 'admin_home.html', {"message": "Success!"})
