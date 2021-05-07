@@ -1,26 +1,92 @@
 from django.test import TestCase, Client
-from django.urls import reverse
-from TAApp.models import Administrator, Course, Instructor, TA
-from .views import Login, Admin_home, Courses, Register, TA_home
-import unittest
+from .models import Administrator, Instructor, TA, Course, Lab
+from .views import Login, Admin_home, Courses, Register, CreateTA
+
+
 
 #Unit Tests
-class TestLogin(unittest.TestCase):
-    credentials = Login()
-    name = []
-    password = []
-    def test_get_login(self):
-        print("Start get login")
-        length = len(self.name)
-        print("username length = ", length)
-        print("password length = ", len(self.password))
-        for i in range(6):
-            if i < length:
-                self.assertEqual(self.name[i], self.credentials.get(self.name[i]))
-            else:
-                print("Testing for get there was no user to test")
-                self.assertEqual("There is no such user", self.credentials.get(i))
-        print("Finish get test")
+class TestModels(TestCase):
+    def setUp(self):
+        administrator = Administrator.objects.create(name='admin', password='admin')
+        instructor = Instructor.objects.create(name="instructor", project_manager=administrator)
+        instructorTA = TA.objects.create(name="TA", project_manager=instructor)
+        course = Course.objects.create(name = "course", description="A course", project_manager=administrator, instructor=instructor, instructorTA=instructorTA)
+        lab = Lab.objects.create(name='lab', description='lab for course', project_manager=instructor,labTA=instructorTA,labForCourse=course)
+
+    #Test Administrator Model
+    def test_admin_name(self):
+        admin = Administrator.objects.get(id=1)
+        response = admin._meta.get_field('name').verbose_name
+        self.assertEqual(response, 'name')
+    def test_admin_password(self):
+        admin=Administrator.objects.get(id=1)
+        response = admin._meta.get_field('password').verbose_name
+        self.assertEqual(response, 'password')
+    def test_admin_role(self):
+        admin=Administrator.objects.get(id=1)
+        response = admin._meta.get_field('role').verbose_name
+        self.assertEqual(response, 'Admin')
+
+    #Test Instructor Model
+    def test_instructor_name(self):
+        instructor1 = Instructor.objects.get(id=1)
+        response = instructor1._meta.get_field('name').verbose_name
+        self.assertEqual(response,'name')
+    def test_instructor_project_manager(self):
+        instructor1 = Instructor.objects.get(id=1)
+        response = instructor1._meta.get_field('project_manager').verbose_name
+        self.assertEqual(response,'project manager')
+
+    #Test TA Model
+    def test_TA_name(self):
+        instructorTA1 = TA.objects.get(id=1)
+        response = instructorTA1._meta.get_field('name').verbose_name
+        self.assertEqual(response, 'name')
+    def test_TA_project_manager(self):
+        instructorTA1 = TA.objects.get(id=1)
+        response = instructorTA1._meta.get_field('project_manager').verbose_name
+        self.assertEqual(response, 'project manager')
+    #Test Courses Model
+    def test_courses_name(self):
+        pass
+    def test_courses_description(self):
+        pass
+    def test_courses_project_manager(self):
+        pass
+    def test_courses_instructors(self):
+        pass
+    def test_courses_instructor_TA(self):
+        pass
+    #Test Lab Model
+    def test_lab_name(self):
+        pass
+    def test_lab_description(self):
+        pass
+    def test_lab_project_manager(self):
+        pass
+    def test_lab_TA(self):
+        pass
+    def test_lab_for_course(self):
+        pass
+
+
+
+class TestViews(TestCase):
+    @classmethod
+    def setUp(cls):
+        number_of_administrators = 5;
+        for admin_id in range(number_of_administrators):
+            Administrator.objects.create(name=f'Admin {admin_id}', password=f'Password{admin_id}')
+    #Test Login Views
+
+    #Test Admin_Home Views
+
+    #Test Courses Views
+
+    #Test Register Views
+
+    #Test TA_Home Views
+
     def test_post_login(self):
         print("Start post login")
         for i in range(4):
@@ -34,7 +100,7 @@ class TestLogin(unittest.TestCase):
             print("Username length = ", len(self.name))
             print(self.name)
             print("\n Finish set \n")
-class TestAdminHome(unittest.TestCase):
+class TestAdminHome(TestCase):
     adminData = Admin_home()
     TA = []
     course = []
@@ -48,7 +114,7 @@ class TestAdminHome(unittest.TestCase):
             else:
                 print("There's no more courses in the database")
                 self.assertEqual("There is no such course", self.course[i])
-class TestCourses(unittest.TestCase):
+class TestCourses(TestCase):
     course = Courses()
     name = []
     instructorTA = []
@@ -62,7 +128,7 @@ class TestCourses(unittest.TestCase):
             else:
                 print("There are no more courses in the database")
                 self.assertEqual("There is no such name", self.name[i])
-class TestRegister(unittest.TestCase):
+class TestRegister(TestCase):
     register = Register()
     name = []
     password = []
@@ -97,8 +163,8 @@ class TestRegister(unittest.TestCase):
             print("Username length = ", len(self.username))
             print(self.username)
             print("\n Finish set \n")
-class TA_home(unittest.TestCase):
-    taHome = TA_home()
+class TA_home(TestCase):
+    taHome = CreateTA()
 
     def test_post_ta_home(self):
         print("Start post TA_home")
@@ -121,11 +187,11 @@ class TestAdminLogin(TestCase):
 
     def test_successful_login(self):
         response = self.client.post("/", {"name": "admin", "password": "admin"}, follow=True)
-        self.assertEqual(response.status_code, 200, "User didn't properly log in")
+        self.assertEqual(response.context['user'], "admin", "User didn't properly log in")
 
     def test_existing_user(self):
         response = self.client.post("/", {"name": "admin", "password": "anotherPassword"}, follow=True)
-        self.assertEqual(response.context['message'], "No such user.", "The password for admin is admin, not anotherPassword")
+        self.assertFalse(response.context['user'], "No such user.", "The password for admin is admin, not anotherPassword")
 
     def test_invalid_user(self):
         response = self.client.post("/", {"name": "invalid-user", "password": "invalid-password"}, follow=True)
@@ -167,7 +233,7 @@ class TestAddCourse(TestCase):
             technicalAssistant = TA(name="TA"+i, project_manager=instructor)
             technicalAssistant.save()
             for j in self.courses[i]:
-                Course(name="test"+j, description="example"+j, project_manager=admin, instructor=instructor, instructorTA=technicalAssistant).save()
+                Courses(name="test"+j, description="example"+j, project_manager=admin, instructor=instructor, instructorTA=technicalAssistant).save()
     def test_course_added(self):
         session = self.client.session
         session["name"] = "potter"
@@ -179,7 +245,7 @@ class TestAddCourse(TestCase):
         self.assertFalse(response.context["name"], "", "The course was added when it wasn't supposed to be")
     def test_bad_description(self):
         response = self.client.post("/courses/", {"name":"test", "instructor":"instructor", "instructorTA":"TA", "description":""}, follow=True)
-        self.assertFalse(response.context["description"], "", "The course was added when it wasn't supposed to be")
+        self.assertFalse(response.context["desc"], "", "The course was added when it wasn't supposed to be")
     def test_bad_instructor(self):
         response = self.client.post("/courses/", {"name": "test", "instructor": "Superman", "instructorTA": "TA", "description": "example"}, follow=True)
         self.assertFalse(response.context["instructor"], "Superman", "Superman is not an instructor within the database")

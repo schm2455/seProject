@@ -17,7 +17,7 @@ class Login(View):
                 if user.role == "Admin":
                     return redirect('/admin_home/')
                 elif user.role == "Instructor":
-                    return redirect('/instructor_home')
+                    return redirect('/Instructor_home')
                 elif user.role == "TA":
                     return redirect('/TA_home/')
                 else:
@@ -32,31 +32,37 @@ class Admin_home(View):
     def get(self, request):
         TAList = list(map(str, TA.objects.all()))
         InstructorList = list(map(str, Instructor.objects.all()))
-        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList})
+        CourseList = list(map(str, Course.objects.all()))
+
+        return render(request, "admin_home.html", {"tas": TAList, "instructors": InstructorList, "courses":CourseList})
 
 
 class Courses(View):
     def get(self, request):
-        return render(request, "courses.html", {})
+        instructors = list(map(str, Instructor.objects.all()))
+        tachoices = list(map(str, TA.objects.all()))
+        return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
 
     def post(self, request):
         coursename = request.POST['name']
-        instructorname = request.POST['instructor']
-        taname = request.POST['instructorTA']
+        instructorname = request.POST['instructorchoice']
+        taname = request.POST['tachoice']
         desc = request.POST['description']
-        if coursename is None or instructorname is None or taname is None or desc is None:
+
+        if coursename is None or instructorname == "Select..." or taname == "Select..." or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
 
-        if Instructor.objects.filter(name=instructorname).exists():
-            instructorname = Instructor.objects.filter(name=instructorname)
-            Course.objects.create(name=coursename, description=desc, Instructor=instructorname, TA=taname)
-            user = MyUser.role
+        instructorchoice = Instructor.objects.get(name=instructorname)
+        tachoice = TA.objects.get(name=taname)
+
+        Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
+        user = MyUser.role
         if user == "Admin":
-            return render(request, 'admin_home.html', {"message": "Success!"})
+            return redirect('/admin_home/', {"message": "Success!"})
         elif user == "Instructor":
-            return render(request, 'admin_home.html', {"message": "Success!"})
+            return redirect('/admin_home/', {"message": "Success!"})
         else:
-            return render(request, 'admin_home.html', {"message": "Success!"})
+            return redirect('/admin_home/', {"message": "Success!"})
 
 
 class Register(View):
@@ -70,7 +76,10 @@ class Register(View):
         if not MyUser.objects.filter(name=request.POST['name']).exists():
             if userWork != 'Select...':
                 MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
-
+                if userWork == "Instructor":
+                    Instructor.objects.create(name=newUser)
+                elif userWork == "TA":
+                    TA.objects.create(name=newUser)
             else:
                 return render(request, "register.html", {"message": "Please try again!"})
         else:
@@ -78,6 +87,20 @@ class Register(View):
         print("Successfully added!")
         return render(request, "login.html", {"message": "Success!"})
 
+class whatCourse(View):
+    def get(self,request):
+        cour = request.GET.get("name")
+
+        myCourse = Course.objects.get(name = cour)
+        desc = myCourse.description
+        name = myCourse.name
+        inst = myCourse.instructor
+        tadude = myCourse.instructorTA
+
+        return render(request, "thiscourse.html", {"desc":desc,"name":name,"inst":inst,"tadude":tadude})
+
+    def post(self,request):
+        return None
 
 class CreateTA(View):
     def get(self, request):
@@ -88,16 +111,20 @@ class CreateTA(View):
         instructorname = request.POST.get('instructor')
 
         if instructorname is None or taname is None:
-            return redirect('/TAs/', {"message": "Please fill all the boxes."})
+            return render(request, "TAs.html", {"message": "Please fill all the boxes."})
         if TA.objects.filter(name=taname).exists():
-            return redirect('/TAs/', {"message": "TA already exists"})
+            return render(request, 'TAs.html', {"message": "TA already exists"})
 
         if not Instructor.objects.filter(name=instructorname).exists():
-            return redirect('/TAs/', {"message": "Instructor does not exist"})
+            return render(request, 'TAs.html', {"message": "Instructor does not exist"})
+        TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
+        user = MyUser.role
+        if user == "Admin":
+            return render(request, 'admin_home.html', {"message": "Success!"})
+        elif user == "Instructor":
+            return render(request, 'admin_home.html', {"message": "Success!"})
         else:
-            TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
-            user = MyUser.role
-            return redirect('/admin_home/', {"message": "Success!"})
+            return render(request, 'admin_home.html', {"message": "Success!"})
 
 
 class TA_home(View):
