@@ -23,7 +23,7 @@
     {% csrf_token %}
       <div id="TAList">
     {% for i in tas %}
-    {{ i }}<br/>
+        {{ i }}<br/>
     {% endfor %}
       </div>
 </form>
@@ -40,7 +40,7 @@
     {% csrf_token %}
       <div id="CourseList">
     {% for i in courses %}
-        <a href="/thiscourse/">{{ i }}</a><br/>
+        <a href="/thiscourse/?name={{ i }}">{{ i }}</a><br/>
     {% endfor %}
       </div>
 

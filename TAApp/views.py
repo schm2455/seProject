@@ -34,7 +34,7 @@ class Admin_home(View):
         InstructorList = list(map(str, Instructor.objects.all()))
         CourseList = list(map(str, Course.objects.all()))
 
-        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList, "courses":CourseList})
+        return render(request, "admin_home.html", {"tas": TAList, "instructors": InstructorList, "courses":CourseList})
 
 
 class Courses(View):
@@ -48,11 +48,12 @@ class Courses(View):
         instructorname = request.POST['instructorchoice']
         taname = request.POST['tachoice']
         desc = request.POST['description']
-        instructorchoice = Instructor.objects.get(name=instructorname)
-        tachoice = TA.objects.get(name=taname)
 
         if coursename is None or instructorname == "Select..." or taname == "Select..." or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
+
+        instructorchoice = Instructor.objects.get(name=instructorname)
+        tachoice = TA.objects.get(name=taname)
 
         Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
         user = MyUser.role
@@ -88,8 +89,15 @@ class Register(View):
 
 class whatCourse(View):
     def get(self,request):
+        cour = request.GET.get("name")
 
-        return render(request, "thiscourse.html")
+        myCourse = Course.objects.get(name = cour)
+        desc = myCourse.description
+        name = myCourse.name
+        inst = myCourse.instructor
+        tadude = myCourse.instructorTA
+
+        return render(request, "thiscourse.html", {"desc":desc,"name":name,"inst":inst,"tadude":tadude})
 
     def post(self,request):
         return None
