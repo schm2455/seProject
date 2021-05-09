@@ -11,31 +11,32 @@
 <div class="bg">
     <div class="HeaderHome"></div>
 <h1 class="home">Admin Homepage</h1>
+<br/>
+<br/>
 <a href="/login/">Logout</a>
-<a href="/instructors/">Create Instructor</a>
     <br/>
     <br/>
   <div class="column_left">
       <div class="Left">
       <div class="left">
-      <h2><a href="TAs/">TA's:</a></h2>
+      <h2>TA's:</h2>
       <form action="/admin_home/"  id = "TAs" method="post">
     {% csrf_token %}
       <div id="TAList">
-    {% for i in tas %}
+    {% for i in TAs %}
     {{ i }}<br/>
     {% endfor %}
       </div>
 </form>
-      TA:<input type="text" name="TA" required minlength="4" maxlength="20" size="20">
-          <input type="submit"
-            value="Add">
+        <form action ="/TAs/">
+          <input type="submit" value="Add">
+        </form>
   </div>
   </div>
   </div>
   <div class="column_center">
         <div class="Left">
-            <h2><a href="/courses/">Courses:</a></h2>
+            <h2>Courses:</h2>
       <form action="/admin_home/"  id = "Courses" method="post">
     {% csrf_token %}
       <div id="CourseList">
@@ -46,24 +47,24 @@
 
 </form>
 
-      Course:<input type="text" name="course" required minlength="3" maxlength="20" size="20">
-          <input type="submit"
-            value ="Add">
+        <form action ="/courses/">
+          <input type="submit" value="Add">
+        </form>
   </div>
   </div>
   <div class="column_right">
-            <h2>Assignments:</h2>
-      <form action="/admin_home/"  id = "Assignments" method="post">
+            <h2>Instructors:</h2>
+      <form action="/admin_home/"  id = "Instructors" method="post">
     {% csrf_token %}
-      <div id="AssignmentList">
-    {% for i in assignments %}
+      <div id="InstructorList">
+    {% for i in instructors %}
     {{ i }}<br/>
     {% endfor %}
       </div>
 </form>
-      Assignment:<input type="text" name="assignment" required minlength="4" maxlength="20" size="20">
-          <input type="submit"
-            value="Add">
+              <form action ="/instructors/">
+          <input type="submit" value="Add">
+        </form>
    <div class ="center">{{ message }}</div>
 </div>
 </div>

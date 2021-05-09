@@ -1,5 +1,4 @@
 """TAScheduler URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
 Examples:
@@ -17,7 +16,7 @@ from django.contrib import admin
 from django.urls import path
 
 from TAApp import views
-from TAApp.views import Login, Admin_home, Courses, Register, TA, Instructor
+from TAApp.views import Login, Admin_home, Courses, Register, CreateTA, CreateInstructor, TA_home, Instructor_home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +25,8 @@ urlpatterns = [
     path('courses/', Courses.as_view()),
     path('register/', Register.as_view()),
     path('login/', Login.as_view()),
-    path('TAs/', TA.as_view()),
-    path('instructors/', Instructor.as_view())
+    path('TAs/', CreateTA.as_view()),
+    path('TA_home/', TA_home.as_view()),
+    path('instructors/', CreateInstructor.as_view()),
+    path('instructor_home/', Instructor_home.as_view())
 ]
