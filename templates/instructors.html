@@ -8,7 +8,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <div class="bg">
@@ -20,7 +19,9 @@
                 <input type="submit">
             </form>
             <div class ="center">{{ message }}</div>
-        <a href="/admin_home/">Go Back</a>
+        <form>
+ <input type="button" value="Go back" onclick="history.back()">
+</form>
         </div>
 
     </div>
