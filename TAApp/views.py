@@ -32,7 +32,8 @@ class Admin_home(View):
     def get(self, request):
         TAList = list(map(str, TA.objects.all()))
         InstructorList = list(map(str, Instructor.objects.all()))
-        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList})
+        CourseList = list(Course.objects.all())
+        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList,"courses":CourseList})
 
 
 class Courses(View):
