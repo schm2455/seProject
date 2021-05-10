@@ -40,8 +40,8 @@
       <form action="/admin_home/"  id = "Courses" method="post">
     {% csrf_token %}
       <div id="CourseList">
-    {% for i in courses %}
-    {{ i }}<br/>
+    {% for course in courses %}
+    {{ course.name }}<br/>
     {% endfor %}
       </div>
 
