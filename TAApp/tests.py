@@ -48,28 +48,52 @@ class TestModels(TestCase):
         self.assertEqual(response, 'project manager')
     #Test Courses Model
     def test_courses_name(self):
-        pass
+        course = Course.objects.get(id=1)
+        expected_course_name = f'{course.name}'
+        self.assertEqual(expected_course_name, 'course')
     def test_courses_description(self):
-        pass
+        course = Course.objects.get(id=1)
+        expected_course_description = f'{course.description}'
+        self.assertEqual(expected_course_description, "A course")
     def test_courses_project_manager(self):
-        pass
+        course = Course.objects.get(id=1)
+        admin = Administrator.objects.get(id=1)
+        expected_course_project_manager = f'{course.project_manager}'
+        self.assertEqual(expected_course_project_manager, str(admin.name))
     def test_courses_instructors(self):
-        pass
+        course = Course.objects.get(id=1)
+        instructor = Instructor.objects.get(id=1)
+        expected_course_instructor = f'{course.instructor}'
+        self.assertEqual(expected_course_instructor, str(instructor.name))
     def test_courses_instructor_TA(self):
-        pass
+        course = Course.objects.get(id=1)
+        instructorTA = TA.objects.get(id=1)
+        expected_course_TA = f'{course.instructorTA}'
+        self.assertEqual(expected_course_TA, str(instructorTA.name))
     #Test Lab Model
     def test_lab_name(self):
-        pass
+        lab = Lab.objects.get(id=1)
+        expected_lab_name = f'{lab.name}'
+        self.assertEqual(expected_lab_name, str('lab'))
     def test_lab_description(self):
-        pass
+        lab = Lab.objects.get(id=1)
+        expected_lab_description = f'{lab.description}'
+        self.assertEqual(expected_lab_description, "lab for course")
     def test_lab_project_manager(self):
-        pass
+        lab = Lab.objects.get(id=1)
+        project_manager = Instructor.objects.get(id=1)
+        expected_lab_project_manager = f'{lab.project_manager}'
+        self.assertEqual(expected_lab_project_manager, str(project_manager.name))
     def test_lab_TA(self):
-        pass
+        lab = Lab.objects.get(id=1)
+        lab_TA = TA.objects.get(id=1)
+        expected_lab_TA = f'{lab.labTA}'
+        self.assertEqual(expected_lab_TA, str(lab_TA.name))
     def test_lab_for_course(self):
-        pass
-
-
+        lab = Lab.objects.get(id=1)
+        lab_for_course = Course.objects.get(id=1)
+        expected_lab_for_course = f'{lab.labForCourse}'
+        self.assertEqual(expected_lab_for_course, str(lab_for_course.name))
 
 class TestViews(TestCase):
     @classmethod
@@ -86,92 +110,6 @@ class TestViews(TestCase):
     #Test Register Views
 
     #Test TA_Home Views
-
-    def test_post_login(self):
-        print("Start post login")
-        for i in range(4):
-            user = 'name' + str(i)
-            self.name.append(user)
-            password = self.credentials.post(user)
-            self.assertIsNotNone(password)
-            self.password.append(password)
-            print("Password length = ", len(self.password))
-            print(self.password)
-            print("Username length = ", len(self.name))
-            print(self.name)
-            print("\n Finish set \n")
-class TestAdminHome(TestCase):
-    adminData = Admin_home()
-    TA = []
-    course = []
-    assignment = []
-    def test_get_admin_home(self):
-        print("Start get for admin_home")
-        length = len(self.course)
-        for i in range(6):
-            if i < length:
-                self.assertEqual(self.course[i], self.adminData.get(self.course[i]))
-            else:
-                print("There's no more courses in the database")
-                self.assertEqual("There is no such course", self.course[i])
-class TestCourses(TestCase):
-    course = Courses()
-    name = []
-    instructorTA = []
-    description = []
-    def test_get_courses(self):
-        print("Start get for courses")
-        length = len(self.name)
-        for i in range(6):
-            if i < length:
-                self.assertEqual(self.name[i], self.course.get(self.name[i]))
-            else:
-                print("There are no more courses in the database")
-                self.assertEqual("There is no such name", self.name[i])
-class TestRegister(TestCase):
-    register = Register()
-    name = []
-    password = []
-    def test_get_register(self):
-        print("Start get for courses")
-        print("Testing name...")
-        length = len(self.name)
-        for i in range(4):
-            if i < length:
-                self.assertEqual(self.name[i], self.register.get(self.name[i]))
-            else:
-                print("There were no more people to register in the database")
-                self.assertEqual("There is no such name", self.name[i])
-        print("Testing password...")
-        length = len(self.password)
-        for i in range(4):
-            if i < length:
-                self.assertEqual(self.password[i], self.register.get(self.password[i]))
-            else:
-                print("There were no more people to register in the database")
-                self.assertEqual("There is no such password", self.password[i])
-    def test_post_register(self):
-        print("Start post TestRegister")
-        for i in range(4):
-            name = 'name' + str(i)
-            self.username.append(name)
-            password = self.register.post(name)
-            self.assertIsNotNone(password)
-            self.password.append(password)
-            print("Password length = ", len(self.password))
-            print(self.password)
-            print("Username length = ", len(self.username))
-            print(self.username)
-            print("\n Finish set \n")
-class TA_home(TestCase):
-    taHome = CreateTA()
-
-    def test_post_ta_home(self):
-        print("Start post TA_home")
-        print("\n Finish post TA_home\n")
-    def test_get_ta_home(self):
-        print("Start get TA_home")
-        print("\n Finish get TA_home\n")
 
 
 
