@@ -44,7 +44,9 @@ class Admin_home(View):
 
 class Courses(View):
     def get(self, request):
-        return render(request, "courses.html", {})
+        instructors = list(map(str, Instructor.objects.all()))
+        tachoices = list(map(str, TA.objects.all()))
+        return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
 
     def post(self, request):
         if MyUser.objects.filter(name=request.POST['name']).exists():
