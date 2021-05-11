@@ -25,6 +25,7 @@ class Administrator(models.Model):
 class Instructor(models.Model):
     name = models.CharField(max_length=20, null=True)
     project_manager = models.ForeignKey(Administrator, on_delete=models.CASCADE, null=True)
+    role = "Instructor"
 
     def __str__(self):
         return self.name
@@ -33,6 +34,7 @@ class Instructor(models.Model):
 class TA(models.Model):
     name = models.CharField(max_length=20, null=True)
     project_manager = models.ForeignKey(Instructor, on_delete=models.CASCADE, null=True)
+    role = "TA"
 
     def __str__(self):
         return self.name
