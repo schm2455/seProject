@@ -95,22 +95,119 @@ class TestModels(TestCase):
         expected_lab_for_course = f'{lab.labForCourse}'
         self.assertEqual(expected_lab_for_course, str(lab_for_course.name))
 
-class TestViews(TestCase):
+#Test Login Views
+class TestLoginViews(TestCase):
     @classmethod
     def setUp(cls):
-        number_of_administrators = 5;
-        for admin_id in range(number_of_administrators):
-            Administrator.objects.create(name=f'Admin {admin_id}', password=f'Password{admin_id}')
-    #Test Login Views
+        user = Administrator.objects.create(name="Admin", password="12345")
+        user.save()
 
-    #Test Admin_Home Views
+    def test_login_url_works(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+    def test_login_get(self):
+        pass
+    def test_login_pass_admin(self):
+        pass
+    def test_login_pass_instructor(self):
+        pass
+    def test_login_pass_TA(self):
+        pass
+    def test_login_bad_password(self):
+        pass
+    def test_login_no_user_found(self):
+        pass
 
-    #Test Courses Views
-
-    #Test Register Views
-
-    #Test TA_Home Views
-
+#Test Admin_Home Views
+class TestAdminHomeViews(TestCase):
+    def setUp(self):
+        admin = Administrator.objects.create(name="Admin", password="Admin")
+    def test_admin_page_can_open(self):
+        response = self.client.get('/admin_home/')
+        self.assertEqual(response.status_code, 200)
+    def test_admin_page_get(self):
+        pass
+#Test Courses Views
+class TestCourseViews(TestCase):
+    def setUp(self):
+        admin = Administrator.objects.create(name='Admin', password='Admin')
+        instructor = Instructor.objects.create(name='Instructor', project_manager=admin)
+        instructorTA = TA.objects.create(name='TA', project_manager=instructor)
+        course = Course.objects.create(name='Course', description='A course', project_manager=admin, instructor=instructor, instructorTA=instructorTA)
+    def test_course_page_can_open(self):
+        response = self.client.get('/courses/')
+        self.assertEqual(response.status_code, 200)
+    def test_course_get(self):
+        pass
+    def test_course_if_admin(self):
+        pass
+    def test_course_if_instructor(self):
+        pass
+    def test_course_if_neither_admin_nor_instructor(self):
+        pass
+#Test Register Views
+class TestRegisterViews(TestCase):
+    def setUp(self):
+        admin = Administrator.objects.create(name="Admin", password="Admin")
+    def test_register_page_can_open(self):
+        response = self.client.get('/register/')
+        self.assertEqual(response.status_code, 200)
+    def test_new_user_added_successfully(self):
+        pass
+    def test_user_already_exists(self):
+        pass
+#Test Create TA
+class TestCreateTA(TestCase):
+    def setUp(self):
+        admin = Administrator.objects.create(name='Admin', password='Admin')
+        instructor = Instructor.objects.create(name='Instructor', project_manager=admin)
+    def test_create_TA_page_opens(self):
+        response = self.client.post('/TAs/')
+        self.assertEqual(response.status_code, 200)
+    def test_TA_already_exists(self):
+        pass
+    def test_TA_successfully_created_TA(self):
+        pass
+    def test_TA_Instructor_exists(self):
+        pass
+    def test_user_is_admin(self):
+        pass
+    def test_user_is_instructor(self):
+        pass
+#Test TA_Home Views
+class TestTAHomeViews(TestCase):
+    def setUp(self):
+        admin = Administrator.objects.create(name="Admin", password="Admin")
+        instructor = Instructor.objects.create(name="instructor", project_manager=admin)
+        instructorTA = TA.objects.create(name="TA", project_manager=instructor)
+    def test_TA_home_page_can_open(self):
+        response = self.client.get('/login/')
+        self.assertEqual(response.status_code, 200)
+    def test_TA_home_get(self):
+        pass
+#Test Instructor Home View
+class TestInstructorHomeView(TestCase):
+    def setUp(self):
+        admin = Administrator.objects.create(name='Admin', password='Admin')
+        instructor = Instructor.objects.create(name='Instructor', project_manager=admin)
+    def test_instructor_home_page_opens(self):
+        response = self.client.get('/instructors/')
+        self.assertEqual(response.status_code, 200)
+    def test_instructor_get(self):
+        pass
+#Test Create Instructor
+class TestCreateInstructor(TestCase):
+    def setUp(self):
+        admin = Administrator.objects.create(name='Admin', password='Admin')
+    def test_create_instructor_page_opens(self):
+        response = self.client.get('/instructors/')
+        self.assertEqual(response.status_code, 200)
+    def test_create_instructor_get(self):
+        pass
+    def test_instructor_already_exists(self):
+        pass
+    def test_instructor_created_successfully(self):
+        pass
 
 
 #Acceptance Tests
