@@ -118,7 +118,12 @@ class CreateTA(View):
         if not Instructor.objects.filter(name=instructorname).exists():
             return render(request, 'TAs.html', {"message": "Instructor does not exist"})
         TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
-        return direct(user)
+        user = MyUser.objects.get(name= request.session.get("name", False))
+
+        if direct(user.role) is not None:
+            return redirect(direct(user.role).url)
+        else:
+            return redirect("login.html", {"message": "unauthorized access"})
 
 
 class TA_home(View):
