@@ -49,17 +49,20 @@ class Courses(View):
         return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
 
     def post(self, request):
-        if MyUser.objects.filter(name=request.POST['name']).exists():
-            user = MyUser.objects.get(name=request.POST['name'])
         coursename = request.POST['name']
-        instructorname = request.POST['instructor']
-        taname = request.POST['instructorTA']
+        instructorname = request.POST['instructorchoice']
+        taname = request.POST['tachoice']
         desc = request.POST['description']
 
-        if coursename is None or instructorname is None or taname is None or desc is None:
+        if coursename is None or instructorname == "Select..." or taname == "Select..." or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
 
-        Course.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
+        instructorchoice = Instructor.objects.get(name=instructorname)
+        tachoice = TA.objects.get(name=taname)
+
+        Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
+        user = MyUser.role
+
         if direct(user.role) is not None:
             return redirect(direct(user.role).url)
         else:
