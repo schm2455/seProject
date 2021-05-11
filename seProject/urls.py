@@ -16,13 +16,14 @@ from django.contrib import admin
 from django.urls import path
 
 from TAApp import views
-from TAApp.views import Login, Admin_home, Courses, Register, CreateTA, CreateInstructor, TA_home, Instructor_home
+from TAApp.views import Login, Admin_home, Courses, Register, CreateTA, CreateInstructor, TA_home, Instructor_home, EditCourse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Login.as_view()),
     path('admin_home/', Admin_home.as_view()),
     path('courses/', Courses.as_view()),
+    path('editcourse/', EditCourse.as_view()),
     path('register/', Register.as_view()),
     path('login/', Login.as_view()),
     path('TAs/', CreateTA.as_view()),

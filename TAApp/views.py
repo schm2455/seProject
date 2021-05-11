@@ -48,6 +48,7 @@ class Courses(View):
         instructors = list(map(str, Instructor.objects.all()))
         tachoices = list(map(str, TA.objects.all()))
 
+
         return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
 
     def post(self, request):
@@ -62,17 +63,21 @@ class Courses(View):
         instructorchoice = Instructor.objects.get(name=instructorname)
         tachoice = TA.objects.get(name=taname)
 
-        user = MyUser.objects.get(name= request.session.get("name", False))
-
-
+        user = request.session.get("name", False)
 
         Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
 
-        if direct(user.role) is not None:
-            return redirect(direct(user.role).url)
+        if direct(user) is not None:
+            return redirect(direct(user).url)
         else:
             return redirect("login.html", {"message": "unauthorized access"})
 
+class EditCourse(View):
+    def get(self, request):
+        courses = list(Course.objects.all())
+        instructors = list(Instructor.objects.all())
+        tachoices = list(TA.objects.all())
+        return render(request, "editcourse.html", {"courses": courses, "instructors": instructors, "tachoices": tachoices})
 
 class Register(View):
     def get(self, request):
@@ -86,14 +91,11 @@ class Register(View):
             if userWork != 'Select...':
                 MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
 
-                if userWork == "Instructor":
-                    Instructor.objects.create(name=newUser)
-                elif userWork == "TA":
-                    TA.objects.create(name=newUser)
             else:
                 return render(request, "register.html", {"message": "Please try again!"})
         else:
             return render(request, "register.html", {"message": "Duplicate user"})
+        print("Successfully added!")
         return render(request, "login.html", {"message": "Success!"})
 
 
@@ -117,20 +119,17 @@ class CreateTA(View):
         return direct(user)
 
 
+
 class TA_home(View):
     def get(self, request):
         return render(request, "TA_home.html", {})
 
 
 class Instructor_home(View):
-    def get(self, request, ):
+    def get(self, request):
         TAList = list(map(str, TA.objects.all()))
         InstructorList = list(map(str, Instructor.objects.all()))
-        teacher = Instructor.objects.get(name=request.session.get("name", False))
-
-        CourseList = list(Course.objects.filter(instructor=teacher))
-        return render(request, "instructor_home.html",
-                      {"TAs": TAList, "instructors": InstructorList, "courses": CourseList, "teacher": teacher})
+        return render(request, "instructor_home.html", {"TAs": TAList, "instructors": InstructorList})
 
 
 class CreateInstructor(View):

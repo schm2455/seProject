@@ -1,0 +1,68 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}"/>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class="bg">
+        <div style="padding-top:170px;margin:0 auto;text-align: center;">
+            <header style="font-size:40px;color:black">Edit A Course</header>
+            <form action="/courses/" method="post">
+                {% csrf_token %}
+                <p>
+                    <label for="coursenamechoice">Course Name:</label>
+                    <select id="coursenamechoice" name="coursenamechoice" onchange="ChangeSelectedCourse()">
+                    <option value="Select...">Select...</option>
+                    {% for i in courses %}
+                        <option value="{{ i.name }}">{{ i.name }}</option>
+                    {% endfor %}
+                    </select>
+                    New Course Name:<input type="text" name="name" ID="editcoursecoursenamebox" style="display:inline">
+
+                </p>
+                <p>
+                <label for="instructorchoice">Instructor:</label>
+                <select id="instructorchoice" name="instructorchoice">
+                    <option value="Select...">Select...</option>
+                    {% for i in instructors %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+                <label for="tachoice">TA:</label>
+                <select id="tachoice" name="tachoice">
+                    <option value="Select...">Select...</option>
+                    {% for i in tachoices %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+                </p>
+                <p style="margin-bottom:0">Course Description</p>
+                <p style="margin-top:0"><textarea name="description" style="width:500px;height:100px;margin-top:0px"></textarea></p>
+
+                <input type="submit">
+            </form>
+        <div class ="center">{{ message }}</div>
+        <form>
+            <input type="button" value="Go back" onclick="history.back()">
+        </form>
+        </div>
+
+    </div>
+</body>
+</html>
+
+<script>
+    window.onload=function(){
+        document.getElementById("editcoursecoursenamebox").value="this stuff works";
+    }
+    function ChangeSelectedCourse(){
+        var courses = {{ courses }};//this line dosent work and I dont know how to make it work
+        var b = ["bbb","ccc"];
+        document.getElementById("editcoursecoursenamebox").value="a";
+    }
+</script>
