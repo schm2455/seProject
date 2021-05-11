@@ -44,6 +44,9 @@ class Admin_home(View):
 
 class Courses(View):
     def get(self, request):
+        instructors = list(map(str, Instructor.objects.all()))
+        tachoices = list(map(str, TA.objects.all()))
+        return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
         return render(request, "courses.html", {})
 
     def post(self, request):
