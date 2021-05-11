@@ -99,6 +99,12 @@ class Register(View):
         return render(request, "login.html", {"message": "Success!"})
 
 
+class CreateLab(View):
+    def get(self, request):
+        return render(request, "AddLab.html")
+    def post(self,request):
+        return render(request, "AddLab.html")
+
 class CreateTA(View):
     def get(self, request):
         loggedIn = request.session["name"]
@@ -108,8 +114,8 @@ class CreateTA(View):
         loggedIn = request.session["name"]
         taname = request.POST.get('name')
         instructorname = request.POST.get('instructor')
-        if MyUser.objects.filter(name=request.POST['name']).exists():
-            user = MyUser.objects.get(name=request.POST['name'])
+        if MyUser.objects.filter(name=loggedIn).exists():
+            user = MyUser.objects.get(name=loggedIn)
         if instructorname is None or taname is None:
             return render(request, "TAs.html", {"message": "Please fill all the boxes."})
         if TA.objects.filter(name=taname).exists():
@@ -118,8 +124,7 @@ class CreateTA(View):
         if not Instructor.objects.filter(name=instructorname).exists():
             return render(request, 'TAs.html', {"message": "Instructor does not exist"})
         TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
-        return direct(user)
-
+        return redirect(direct(user.role).url)
 
 
 class TA_home(View):
