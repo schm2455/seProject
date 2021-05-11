@@ -12,6 +12,7 @@ class Login(View):
 
         if MyUser.objects.filter(name=request.POST['name']).exists():
             user = MyUser.objects.get(name=request.POST['name'])
+            request.session["name"] = user.name
             if user.password == request.POST['password']:
                 if direct(user.role) is not None:
                     return redirect(direct(user.role).url)
@@ -39,31 +40,37 @@ class Admin_home(View):
         TAList = list(map(str, TA.objects.all()))
         InstructorList = list(map(str, Instructor.objects.all()))
         CourseList = list(Course.objects.all())
-        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList,"courses":CourseList})
+        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList, "courses": CourseList})
 
 
 class Courses(View):
     def get(self, request):
         instructors = list(map(str, Instructor.objects.all()))
         tachoices = list(map(str, TA.objects.all()))
+
+
         return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
 
     def post(self, request):
-        if MyUser.objects.filter(name=request.POST['name']).exists():
-            user = MyUser.objects.get(name=request.POST['name'])
         coursename = request.POST['name']
-        instructorname = request.POST['instructor']
-        taname = request.POST['instructorTA']
+        instructorname = request.POST['instructorchoice']
+        taname = request.POST['tachoice']
         desc = request.POST['description']
 
-        if coursename is None or instructorname is None or taname is None or desc is None:
+        if coursename is None or instructorname == "Select..." or taname == "Select..." or desc is None:
             return render(request, "courses.html", {"message": "Please fill all the boxes."})
 
-        Course.objects.create(name=coursename, description=desc, instructor=instructorname, instructorTA=taname)
-        if direct(user.role) is not None:
-            return redirect(direct(user.role).url)
+        instructorchoice = Instructor.objects.get(name=instructorname)
+        tachoice = TA.objects.get(name=taname)
+
+        user = request.session.get("name", False)
+
+        Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
+
+        if direct(user) is not None:
+            return redirect(direct(user).url)
         else:
-            return redirect('login.html', {"message": "unauthorized access"})
+            return redirect("login.html", {"message": "unauthorized access"})
 
 class EditCourse(View):
     def get(self, request):
@@ -109,10 +116,8 @@ class CreateTA(View):
         if not Instructor.objects.filter(name=instructorname).exists():
             return render(request, 'TAs.html', {"message": "Instructor does not exist"})
         TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
-        if direct(user.role) is not None:
-            return redirect(direct(user.role).url)
-        else:
-            return redirect('login.html', {"message": "unauthorized access"})
+        return direct(user)
+
 
 
 class TA_home(View):
@@ -129,12 +134,14 @@ class Instructor_home(View):
 
 class CreateInstructor(View):
     def get(self, request):
+        loggedIn = request.session["name"]
         return render(request, "instructors.html", {})
 
     def post(self, request):
+        loggedIn = request.session["name"]
         instructorname = request.POST.get('instructor')
-        if MyUser.objects.filter(name=request.POST['name']).exists():
-            user = MyUser.objects.get(name=request.POST['name'])
+        if MyUser.objects.filter(name=loggedIn).exists():
+            user = MyUser.objects.get(name=loggedIn)
         if instructorname is None:
             return render(request, "instructors.html", {"message": "Please fill all the boxes."})
         if Instructor.objects.filter(name=instructorname).exists():
