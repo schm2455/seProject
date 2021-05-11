@@ -94,9 +94,11 @@ class Register(View):
 
 class CreateTA(View):
     def get(self, request):
+        loggedIn = request.session["name"]
         return render(request, "TAs.html", )
 
     def post(self, request):
+        loggedIn = request.session["name"]
         taname = request.POST.get('name')
         instructorname = request.POST.get('instructor')
         if MyUser.objects.filter(name=request.POST['name']).exists():
