@@ -12,6 +12,7 @@ class Login(View):
 
         if MyUser.objects.filter(name=request.POST['name']).exists():
             user = MyUser.objects.get(name=request.POST['name'])
+            request.session["name"] = user.name
             if user.password == request.POST['password']:
                 if direct(user.role) is not None:
                     return redirect(direct(user.role).url)
@@ -63,10 +64,10 @@ class Courses(View):
         Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
         user = MyUser.role
 
-        if direct(user.role) is not None:
-            return redirect(direct(user.role).url)
+        if direct(user) is not None:
+            return redirect(direct(user).url)
         else:
-            return redirect('login.html', {"message": "unauthorized access"})
+            return redirect("login.html", {"message": "unauthorized access"})
 
 class Register(View):
     def get(self, request):
@@ -125,12 +126,14 @@ class Instructor_home(View):
 
 class CreateInstructor(View):
     def get(self, request):
+        loggedIn = request.session["name"]
         return render(request, "instructors.html", {})
 
     def post(self, request):
+        loggedIn = request.session["name"]
         instructorname = request.POST.get('instructor')
-        if MyUser.objects.filter(name=request.POST['name']).exists():
-            user = MyUser.objects.get(name=request.POST['name'])
+        if MyUser.objects.filter(name=loggedIn).exists():
+            user = MyUser.objects.get(name=loggedIn)
         if instructorname is None:
             return render(request, "instructors.html", {"message": "Please fill all the boxes."})
         if Instructor.objects.filter(name=instructorname).exists():
