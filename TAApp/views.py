@@ -64,7 +64,7 @@ class Courses(View):
         if direct(user.role) is not None:
             return redirect(direct(user.role).url)
         else:
-            return redirect('login.html', {"message": "unauthorized access"})
+             return redirect('login.html', {"message": "unauthorized access"})
 
 class Register(View):
     def get(self, request):
