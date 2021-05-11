@@ -32,7 +32,7 @@ def direct(user_role):
     elif user_role == "TA":
         return redirect('/TA_home/')
     else:
-        return redirect("login", {"message": "unauthorized access"})
+        return None
 
 
 class Admin_home(View):
