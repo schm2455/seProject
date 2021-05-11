@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% csrf_token %}
+<div id = "inst">
+    <h1>{{ inst }}</h1>
+</div>
+<div id = "tadude">
+    <h2>{{ tadude }}</h2>
+</div>
+<div id = "desc">
+    <h3>{{ desc }}</h3>
+</div>
+<div id = "name">
+    <h4>{{ name }}</h4>
+</div>
+        <form>
+            <input type="button" value="Go back" onclick="history.back()">
+        </form>
+</body>
+</html>

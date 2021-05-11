@@ -1,0 +1,72 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<div class="bg">
+    <div class="HeaderHome"></div>
+<h1 class="home">Instructor Homepage</h1>
+<br/>
+<br/>
+<a href="/login/">Logout</a>
+    <br/>
+    <br/>
+  <div class="column_left">
+      <div class="Left">
+      <div class="left">
+      <h2>TA's:</h2>
+      <form action="/instructor_home/"  id = "TAs" method="post">
+    {% csrf_token %}
+      <div id="TAList">
+    {% for i in TAs %}
+    {{ i }}<br/>
+    {% endfor %}
+      </div>
+</form>
+        <form action ="/TAs/">
+          <input type="submit" value="Add">
+        </form>
+  </div>
+  </div>
+  </div>
+  <div class="column_center">
+        <div class="Left">
+            <h2>Courses:</h2>
+      <form action="/instructor_home/"  id = "Courses" method="post">
+    {% csrf_token %}
+      <div id="CourseList">
+    {% for i in courses %}
+    {{ i }}<br/>
+    {% endfor %}
+      </div>
+
+</form>
+
+        <form action ="/courses/">
+          <input type="submit" value="Add">
+        </form>
+  </div>
+  </div>
+  <div class="column_right">
+            <h2>Instructors:</h2>
+      <form action="/instructor_home/"  id = "Instructors" method="post">
+    {% csrf_token %}
+      <div id="InstructorList">
+    {% for i in instructors %}
+    {{ i }}<br/>
+    {% endfor %}
+      </div>
+</form>
+              <form action ="/instructors/">
+          <input type="submit" value="Add">
+        </form>
+   <div class ="center">{{ message }}</div>
+</div>
+</div>
+</body>
+</html>
