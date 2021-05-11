@@ -65,6 +65,13 @@ class Courses(View):
         else:
             return redirect('login.html', {"message": "unauthorized access"})
 
+class EditCourse(View):
+    def get(self, request):
+        courses = list(Course.objects.all())
+        instructors = list(Instructor.objects.all())
+        tachoices = list(TA.objects.all())
+        return render(request, "editcourse.html", {"courses": courses, "instructors": instructors, "tachoices": tachoices})
+
 class Register(View):
     def get(self, request):
         return render(request, "register.html", {})
