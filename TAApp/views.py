@@ -32,7 +32,7 @@ def direct(user_role):
     elif user_role == "TA":
         return redirect('/TA_home/')
     else:
-        return None
+        return redirect("login", {"message": "unauthorized access"})
 
 
 class Admin_home(View):
@@ -40,13 +40,15 @@ class Admin_home(View):
         TAList = list(map(str, TA.objects.all()))
         InstructorList = list(map(str, Instructor.objects.all()))
         CourseList = list(Course.objects.all())
-        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList,"courses":CourseList})
+        return render(request, "admin_home.html", {"TAs": TAList, "instructors": InstructorList, "courses": CourseList})
 
 
 class Courses(View):
     def get(self, request):
         instructors = list(map(str, Instructor.objects.all()))
         tachoices = list(map(str, TA.objects.all()))
+
+
         return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
 
     def post(self, request):
@@ -61,8 +63,9 @@ class Courses(View):
         instructorchoice = Instructor.objects.get(name=instructorname)
         tachoice = TA.objects.get(name=taname)
 
+        user = request.session.get("name", False)
+
         Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
-        user = MyUser.role
 
         if direct(user) is not None:
             return redirect(direct(user).url)
@@ -106,10 +109,8 @@ class CreateTA(View):
         if not Instructor.objects.filter(name=instructorname).exists():
             return render(request, 'TAs.html', {"message": "Instructor does not exist"})
         TA.objects.create(name=taname, project_manager=Instructor.objects.get(name=instructorname))
-        if direct(user.role) is not None:
-            return redirect(direct(user.role).url)
-        else:
-            return redirect('login.html', {"message": "unauthorized access"})
+        return direct(user)
+
 
 
 class TA_home(View):
