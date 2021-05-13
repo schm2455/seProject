@@ -36,7 +36,6 @@ def direct(user_role):
 
 
 def valid(user_role, expected):
-    print(user_role + " " + expected)
     if user_role == expected:
         return True
     else:
