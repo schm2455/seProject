@@ -1,5 +1,10 @@
+from unittest.mock import Mock
+
+from django.contrib.messages.storage import session
 from django.test import TestCase, Client
-from .models import Administrator, Instructor, TA, Course, Lab
+from django.urls import reverse
+
+from .models import Administrator, Instructor, TA, Course, Lab, MyUser
 from .views import Login, Admin_home, Courses, Register, CreateTA
 
 
@@ -96,32 +101,101 @@ class TestModels(TestCase):
         self.assertEqual(expected_lab_for_course, str(lab_for_course.name))
 
 #Test Login Views
-class TestLoginViews(TestCase):
-    @classmethod
-    def setUp(cls):
-        user = Administrator.objects.create(name="Admin", password="12345")
-        user.save()
-
-    def test_login_url_works(self):
-        response = self.client.get('/')
+class BaseTest(TestCase):
+    def setUp(self):
+        self.register_url=reverse('register')
+        self.login_url=reverse('login')
+        self.admin_home_url=reverse('admin_home')
+        self.admin={
+            'name':'admin',
+            'password':'admin',
+            'job':'Admin'
+        }
+        self.instructor={
+            'name':'instructor',
+            'password':'instructor',
+            'job':'Instructor'
+        }
+        self.TA={
+            'name':'TA',
+            'password':'TA',
+            'job':'TA'
+        }
+        self.user_already_active={
+            'name':'admin',
+            'password':'bad password',
+            'job':'Admin'
+        }
+        self.user_does_not_select_job={
+            'name':'test user',
+            'password': 'password',
+            'job':'Select...'
+        }
+        return super().setUp()
+class RegisterTest(BaseTest):
+    def test_can_view_page(self):
+        response = self.client.get(self.register_url)
         self.assertEqual(response.status_code, 200)
-    def test_login_get(self):
-        pass
+        self.assertTemplateUsed(response,'register.html')
+    def test_can_register_admin(self):
+        response = self.client.post(self.register_url,self.admin, format='test/html')
+        self.assertEqual(response.status_code, 302)
+    def test_can_register_instructor(self):
+        response = self.client.post(self.register_url,self.instructor, format='test/html')
+        self.assertEqual(response.status_code, 302)
+    def test_can_register_TA(self):
+        response = self.client.post(self.register_url, self.TA, format='test/html')
+        self.assertEqual(response.status_code, 302)
+    def test_user_already_registered(self):
+        self.client.post(self.register_url, self.admin, format='test/html')
+        response = self.client.post(self.register_url, self.user_already_active, format='test/html')
+        self.assertEqual(response.context['message'], "Duplicate user")
+    def test_user_does_not_select_job(self):
+        response = self.client.post(self.register_url, self.user_does_not_select_job, format='test/html')
+        self.assertEqual(response.context['message'], 'Please try again!')
+class TestLoginView(BaseTest):
+    def test_login_url_works(self):
+        response = self.client.get(self.login_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'login.html')
     def test_login_pass_admin(self):
-        pass
+        self.client.post(self.register_url, self.admin, format='test/html')
+        admin = MyUser.objects.filter(name=self.admin['name']).first()
+        admin.save()
+        response = self.client.post(self.login_url, self.admin, format='text/html')
+        self.assertEqual(response.status_code, 302)
     def test_login_pass_instructor(self):
-        pass
+        self.client.post(self.register_url, self.instructor, format='test/html')
+        instructor = Instructor.objects.filter(name=self.instructor['name']).first()
+        instructor.save()
+        response = self.client.post(self.login_url, self.instructor, format='text/html')
+        self.assertEqual(response.status_code, 302)
     def test_login_pass_TA(self):
-        pass
+        self.client.post(self.register_url, self.TA, format='test/html')
+        instructorTA = TA.objects.filter(name=self.TA['name']).first()
+        instructorTA.save()
+        response = self.client.post(self.login_url, self.TA, format='text/html')
+        self.assertEqual(response.status_code,302)
     def test_login_bad_password(self):
-        pass
+        self.client.post(self.register_url, self.admin, format='text/html')
+        response = self.client.post(self.login_url, self.user_already_active, format='text/html')
+        self.assertEqual(response.context['message'], "Bad Password")
     def test_login_no_user_found(self):
-        pass
+        response = self.client.post(self.login_url, self.admin, format='text/html')
+        self.assertEqual(response.context['message'], "No Such User")
 
 #Test Admin_Home Views
 class TestAdminHomeViews(TestCase):
     def setUp(self):
-        admin = Administrator.objects.create(name="Admin", password="Admin")
+        instructors={
+            "A":"Williams",
+            "B":"Derrick",
+            "C":"Lewis"
+        }
+        instructorsTA={
+            for i in instructors.keys():
+                instructorsTA.
+        }
     def test_admin_page_can_open(self):
         response = self.client.get('/admin_home/')
         self.assertEqual(response.status_code, 200)
@@ -191,7 +265,7 @@ class TestInstructorHomeView(TestCase):
         admin = Administrator.objects.create(name='Admin', password='Admin')
         instructor = Instructor.objects.create(name='Instructor', project_manager=admin)
     def test_instructor_home_page_opens(self):
-        response = self.client.get('/instructors/')
+        response = self.client.get('/instructor_home/')
         self.assertEqual(response.status_code, 200)
     def test_instructor_get(self):
         pass
