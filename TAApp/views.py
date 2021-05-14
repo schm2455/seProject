@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.views import View
 from TAApp.models import MyUser, Administrator, Instructor, TA, Course
+from django.core import serializers
 
 
 class Login(View):
@@ -123,8 +124,12 @@ class EditCourse(View):
             courses = list(Course.objects.all())
             instructors = list(Instructor.objects.all())
             tachoices = list(TA.objects.all())
+
+            jsoncourses = serializers.serialize('json', courses)
+            jsoninstructors = serializers.serialize('json', instructors)
+            jsontachoices= serializers.serialize('json', tachoices)
             return render(request, "editcourse.html",
-                          {"courses": courses, "instructors": instructors, "tachoices": tachoices})
+                          {"courses": courses, "instructors": instructors, "tachoices": tachoices,"jsoncourses":jsoncourses,"jsoninstructors":jsoninstructors,"jsontachoices":jsontachoices})
         else:
             return render(request, "login.html", {"message": "unauthorized access"})
 

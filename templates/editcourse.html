@@ -1,5 +1,6 @@
 {% load static %}
 
+
 <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}"/>
 
 <!DOCTYPE html>
@@ -21,6 +22,8 @@
                     {% for i in courses %}
                         <option value="{{ i.name }}">{{ i.name }}</option>
                     {% endfor %}
+
+
                     </select>
                     New Course Name:<input type="text" name="name" ID="editcoursecoursenamebox" style="display:inline">
 
@@ -42,7 +45,7 @@
                 </select>
                 </p>
                 <p style="margin-bottom:0">Course Description</p>
-                <p style="margin-top:0"><textarea name="description" style="width:500px;height:100px;margin-top:0px"></textarea></p>
+                <p style="margin-top:0"><textarea ID="coursedescriptionbox" name="description" style="width:500px;height:100px;margin-top:0px"></textarea></p>
 
                 <input type="submit">
             </form>
@@ -61,8 +64,22 @@
         document.getElementById("editcoursecoursenamebox").value="this stuff works";
     }
     function ChangeSelectedCourse(){
-        var courses = {{ courses }};//this line dosent work and I dont know how to make it work
-        var b = ["bbb","ccc"];
-        document.getElementById("editcoursecoursenamebox").value="a";
+        var nametomatch = document.getElementById("coursenamechoice").value;
+        var coursesstring =  '{{ jsoncourses|escapejs }}' ;//this line dosent work and I dont know how to make it work
+
+        var courselist = JSON.parse(coursesstring);
+        var instructorlist = JSON.parse('{{ jsoninstructors|escapejs }}');
+        var talist = JSON.parse('{{ jsontachoices|escapejs }}');
+
+        var chosencourseobject;
+        for (i = 0; i < courselist.length; i++) {
+         if(courselist[i].fields.name==nametomatch){
+            chosencourseobject=courselist[i].fields;
+         }
+        }
+        document.getElementById("editcoursecoursenamebox").value= chosencourseobject.name;
+        document.getElementById("instructorchoice").value = instructorlist[chosencourseobject.instructor-1].fields.name;
+        document.getElementById("tachoice").value = talist[chosencourseobject.instructorTA-1].fields.name;
+        document.getElementById("coursedescriptionbox").value = chosencourseobject.description;
     }
 </script>
