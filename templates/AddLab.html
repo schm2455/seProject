@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>{% load static %}
+{% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}"/>
 
@@ -19,6 +10,28 @@
     <title>Title</title>
 </head>
 <body>
-
+    <p>Lab Name:<input type="text" name="name" style="display:inline">
+        <label for="instructorchoice">Instructor:</label>
+        <select id="instructorchoice" name="instructorchoice">
+            <option value="Select...">Select...</option>
+            {% for i in instructors %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+            <label for="tachoice">TA:</label>
+            <select id="tachoice" name="tachoice">
+                <option value="Select...">Select...</option>
+                {% for i in tachoices %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+             </select>
+        <label for="coursechoice">Course:</label>
+            <select id="coursechoice" name="coursechoice">
+                <option value="Select...">Select...</option>
+                {% for i in coursechoices %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+             </select>
+    </p>
 </body>
 </html>

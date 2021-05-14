@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.views import View
-from TAApp.models import MyUser, Administrator, Instructor, TA, Course
+from TAApp.models import MyUser, Administrator, Instructor, TA, Course, Lab
 
 
 class Login(View):
@@ -92,7 +92,27 @@ class Courses(View):
 
 
 class CreateLab(View):
-    pass
+    def get(self,request):
+        instructors = list(map(str, Instructor.objects.all()))
+        tachoices = list(map(str, TA.objects.all()))
+        coursechoices = list(map(str, Course.objects.all()))
+        return render(request, "AddLab.html", {"instructors": instructors, "tachoices": tachoices, "coursechoices":coursechoices})
+
+    def post(self, request):
+        labname = request.POST['name']
+        instructorname = request.POST['instructorchoice']
+        taname = request.POST['tachoice']
+        coursename = request.POST['coursechoice']
+        desc = request.POST['description']
+        user = MyUser.objects.get(name=request.session.get("name", False))
+
+        instructorchoice = Instructor.objects.get(name=instructorname)
+        tachoice = TA.objects.get(name=taname)
+        coursechoice = Course.objects.get(name=coursename)
+
+        Lab.objects.create(name=labname, description=desc, project_manager=instructorchoice, labTA=tachoice, labForCourse=coursechoice)
+
+        return redirect(direct(user.role).url)
 
 
 class Register(View):
