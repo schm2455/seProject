@@ -7,23 +7,23 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Add A Course</title>
+    <title>Assign TA's</title>
 </head>
 <body>
     <div class="bg">
         <div style="padding-top:170px;margin:0 auto;text-align: center;">
-            <header style="font-size:40px;color:black">Add a Course</header>
-            <form action="/courses/" method="post">
+            <header style="font-size:40px;color:black">Assign TA's</header>
+            <form action="/assignTAs/" method="post">
                 {% csrf_token %}
-                <p>Course Name:<input type="text" name="name" style="display:inline">
-                    <label for="instructorchoice">Instructor:</label>
-                    <select id="instructorchoice" name="instructorchoice">
+                    <label for="coursechoice">Course name:</label>
+                    <select id="coursechoice" name="coursechoice">
                     <option value="Select...">Select...</option>
-                        {% for i in instructors %}
+                        {% for i in courses %}
                             <option value="{{ i }}">{{ i }}</option>
                         {% endfor %}
 
                     </select>
+                            <p>Lab Name:<input type="text" name="lab" style="display:inline">
                 </p>
                 <p>
                     <label for="tachoice">TA:</label>
@@ -34,9 +34,8 @@
                         {% endfor %}
 
                     </select>
-                <p style="margin-bottom:0">Course Description</p>
-                <p style="margin-top:0"><textarea name="description" style="width:500px;height:100px;margin-top:0px"></textarea></p>
-
+                    </input>
+                </p>
                 <input type="submit">
             </form>
         <div class ="center">{{ message }}</div>

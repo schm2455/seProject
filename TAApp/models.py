@@ -47,6 +47,9 @@ class Course(models.Model):
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, default="")
     instructorTA = models.ForeignKey(TA, on_delete=models.CASCADE, default="")
 
+    def __str__(self):
+        return self.name
+    
 
 class Lab(models.Model):
     name = models.CharField(max_length=20, null=True)

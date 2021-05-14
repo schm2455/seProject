@@ -16,7 +16,7 @@ from django.contrib import admin
 from django.urls import path
 
 from TAApp import views
-from TAApp.views import Login, Admin_home, Courses, Register, CreateTA, CreateInstructor, TA_home, Instructor_home, EditCourse
+from TAApp.views import Assign_TAs, Login, Admin_home, Courses, Register, CreateTA, CreateInstructor, TA_home, Instructor_home, EditCourse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +29,6 @@ urlpatterns = [
     path('TAs/', CreateTA.as_view()),
     path('TA_home/', TA_home.as_view()),
     path('instructors/', CreateInstructor.as_view()),
-    path('instructor_home/', Instructor_home.as_view())
+    path('instructor_home/', Instructor_home.as_view()),
+    path('assign_TAs/', Assign_TAs.as_view())
 ]
