@@ -13,7 +13,7 @@
     <div class="bg">
         <div style="padding-top:170px;margin:0 auto;text-align: center;">
             <header style="font-size:40px;color:black">Assign TA's</header>
-            <form action="/assignTAs/" method="post">
+            <form action="/assign_TAs/" method="post">
                 {% csrf_token %}
                     <label for="coursechoice">Course name:</label>
                     <select id="coursechoice" name="coursechoice">
@@ -28,7 +28,7 @@
                 <p>
                     <label for="tachoice">TA:</label>
                     <select id="tachoice" name="tachoice">
-                    <option value="Select...">Select...</option>
+                    <option value="Select..." >Select...</option>
                         {% for i in tachoices %}
                             <option value="{{ i }}">{{ i }}</option>
                         {% endfor %}
@@ -38,9 +38,16 @@
                 </p>
                 <input type="submit">
             </form>
-        <div class ="center">{{ message }}</div>
-        <form>
-            <input type="button" value="Go back" onclick="history.back()">
+          <form action='/go_back/' method="get">
+            {% csrf_token %}
+             <input type="submit" value="Go back">
+        </form>
+            <div class ="center">
+        {% if messages %}
+            {% for i in messages %}
+            {{ i }}
+            {% endfor %}
+        {% endif %}
         </form>
         </div>
 

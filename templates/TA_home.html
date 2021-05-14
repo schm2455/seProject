@@ -22,7 +22,8 @@
     {% csrf_token %}
       <div id="LabList">
     {% for i in labs %}
-    {{ i }}<br/>
+
+    {{ i.name }}<br/>
     {% endfor %}
       </div>
 </form>

@@ -38,10 +38,18 @@
                 <p style="margin-top:0"><textarea name="description" style="width:500px;height:100px;margin-top:0px"></textarea></p>
 
                 <input type="submit">
+
             </form>
-        <div class ="center">{{ message }}</div>
-        <form>
-            <input type="button" value="Go back" onclick="history.back()">
+          <form action='/go_back/' method="get">
+            {% csrf_token %}
+             <input type="submit" value="Go back">
+        </form>
+            <div class ="center">
+        {% if messages %}
+            {% for i in messages %}
+            {{ i }}
+            {% endfor %}
+        {% endif %}
         </form>
         </div>
 

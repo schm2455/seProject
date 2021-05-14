@@ -15,13 +15,29 @@
             <header style="font-size:40px;color:black">Add a TA</header>
             <form action="/TAs/" method="post">
                 {% csrf_token %}
-                <p>TA Name:<input type="text" name="name" style="display:inline"> Instructor:<input type="text" name="instructor" style="display:inline"></p>
+                <p>TA Name:<input type="text" name="name" style="display:inline">
+                    <label for="tachoice" style="display:inline">Instructor:</label>
+                    <select id="instructorchoice" name="instructorchoice">
+                    <option value="Select...">Select...</option>
+                        {% for i in instructors %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+
+                    </select>
+                <p>Password: <input type="text" name="password" style="display:inline"> </p>
                 <input type="submit">
             </form>
-            <div class ="center">{{ message }}</div>
-        <form>
-            <input type="button" value="Go back" onclick="history.back()">
+       <form action='/go_back/' method="get">
+            {% csrf_token %}
+             <input type="submit" value="Go back">
         </form>
+        <div class ="center">
+        {% if messages %}
+            {% for i in messages %}
+            {{ i }}
+            {% endfor %}
+        {% endif %}
+        </div>
         </div>
     </div>
 </body>
