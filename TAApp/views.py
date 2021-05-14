@@ -77,7 +77,7 @@ class Courses(View):
         taname = request.POST['tachoice']
         desc = request.POST['description']
 
-        if coursename is '' or instructorname == "Select..." or taname == "Select..." or desc is '':
+        if coursename == '' or instructorname == "Select..." or taname == "Select..." or desc == '':
             messages.error(request, 'Please fill all the boxes')
             return redirect('/courses/')
 
@@ -155,7 +155,7 @@ class CreateTA(View):
         instructorname = request.POST.get('instructorchoice')
         password = request.POST.get('password')
 
-        if instructorname == "Select..." or taname is '' or password is '':
+        if instructorname == "Select..." or taname == '' or password == '':
             messages.error(request, 'Please fill all the boxes')
             return redirect('/TAs/')
 
@@ -221,7 +221,7 @@ class CreateInstructor(View):
         if MyUser.objects.filter(name=loggedIn).exists():
             user = MyUser.objects.get(name=loggedIn)
 
-        if instructorname is '' or password is '':
+        if instructorname == '' or password == '':
             messages.error(request, 'Please fill all the boxes')
             return redirect('/instructors/')
 
@@ -261,7 +261,7 @@ class Assign_TAs(View):
         ta = request.POST['tachoice']
         labname = request.POST['lab']
 
-        if course == "Select..." or labname is '' or ta == "Select...":
+        if course == "Select..." or labname == '' or ta == "Select...":
             messages.error(request, 'Please fill all the boxes')
             return redirect('/assign_TAs/')
 
