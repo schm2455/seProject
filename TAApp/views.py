@@ -72,6 +72,10 @@ class Courses(View):
             return redirect("login.html", {"message": "unauthorized access"})
 
 
+class CreateLab(View):
+    pass
+
+
 class Register(View):
     def get(self, request):
         return render(request, "register.html", {})
