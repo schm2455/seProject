@@ -214,3 +214,25 @@ class CreateInstructor(View):
             return redirect(direct(user.role).url)
         else:
             return redirect('login.html', {"message": "unauthorized access"})
+
+
+class Assign_TAs(View):
+    def get(self, request):
+        loggedIn = request.session.get("name")
+        if MyUser.objects.filter(name=loggedIn).exists():
+            user = MyUser.objects.get(name=loggedIn)
+        if valid(user.role, "Admin") or valid(user.role, "Instructor"):
+            courses = list(map(str, Course.objects.all()))
+            tachoices = list(map(str, TA.objects.all()))
+            return render(request, "assign_TAs.html", {"courses": courses, "tachoices": tachoices})
+        else:
+            return render(request, "login.html", {"message": "unauthorized access"})
+
+    def post(self, request):
+        loggedIn = request.session["name"]
+        if MyUser.objects.filter(name=loggedIn).exists():
+            user = MyUser.objects.get(name=loggedIn)
+        if valid(user.role, "Admin") or valid(user.role, "Instructor"):
+            print("DO STUFF")
+        else:
+            return render(request, "login.html", {"message": "unauthorized access"})
