@@ -17,7 +17,7 @@ from django.urls import path
 
 from TAApp import views
 from TAApp.views import Assign_TAs, Login, Admin_home, Courses, Register, CreateTA, CreateInstructor, TA_home, \
-    Instructor_home, EditCourse, Go_Back
+    Instructor_home, EditCourse, Go_Back, DeleteCourse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +33,5 @@ urlpatterns = [
     path('instructor_home/', Instructor_home.as_view()),
     path('assign_TAs/', Assign_TAs.as_view()),
     path('go_back/', Go_Back.as_view()),
+    path('deletecourse/', DeleteCourse.as_view()),
 ]

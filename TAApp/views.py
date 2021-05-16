@@ -139,6 +139,34 @@ class EditCourse(View):
             return render(request, "login.html", {"message": "unauthorized access"})
 
 
+class DeleteCourse(View):
+    def get(self, request):
+        loggedIn = request.session.get("name")
+        if MyUser.objects.filter(name=loggedIn).exists():
+            user = MyUser.objects.get(name=loggedIn)
+
+        if valid(user.role, "Admin") or valid(user.role, "Instructor"):
+            courses = list(map(str, Course.objects.all()))
+            return render(request, "deletecourse.html", {"courses": courses})
+        else:
+            return render(request, "login.html", {"message": "unauthorized access"})
+
+    def post(self, request):
+        course = request.POST['coursechoice']
+
+        if course == "Select...":
+            messages.error(request, 'Please fill all the boxes')
+            return redirect('/deletecourse/')
+        selectedcourse = Course.objects.get(name=course)
+        user = MyUser.objects.get(name=request.session.get("name"))
+        if direct(user.role) is not None:
+            selectedcourse.delete()
+            messages.success(request, 'Successfully deleted course')
+            return redirect(direct(user.role).url)
+        else:
+            return redirect('login.html', {"message": "unauthorized access"})
+
+
 class CreateTA(View):
     def get(self, request):
         loggedIn = request.session.get("name")
