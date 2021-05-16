@@ -49,14 +49,14 @@ class Admin_home(View):
         loggedIn = request.session.get("name")
         if MyUser.objects.filter(name=loggedIn).exists():
             user = MyUser.objects.get(name=loggedIn)
-        if valid(user.role, "Admin"):
-            TAList = list(map(str, TA.objects.all()))
-            InstructorList = list(map(str, Instructor.objects.all()))
-            CourseList = list(Course.objects.all())
-            return render(request, "admin_home.html",
-                          {"TAs": TAList, "instructors": InstructorList, "courses": CourseList})
-        else:
-            return render(request, "login.html", {"message": "unauthorized access"})
+            if valid(user.role, "Admin"):
+                TAList = list(map(str, TA.objects.all()))
+                InstructorList = list(map(str, Instructor.objects.all()))
+                CourseList = list(Course.objects.all())
+                return render(request, "admin_home.html",
+                            {"TAs": TAList, "instructors": InstructorList, "courses": CourseList})
+            else:
+                return render(request, "login.html", {"message": "unauthorized access"})
 
 
 class Courses(View):
@@ -64,12 +64,12 @@ class Courses(View):
         loggedIn = request.session.get("name")
         if MyUser.objects.filter(name=loggedIn).exists():
             user = MyUser.objects.get(name=loggedIn)
-        if valid(user.role, "Admin") or valid(user.role, "Instructor"):
-            instructors = list(map(str, Instructor.objects.all()))
-            tachoices = list(map(str, TA.objects.all()))
-            return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
-        else:
-            return render(request, "login.html", {"message": "unauthorized access"})
+            if valid(user.role, "Admin") or valid(user.role, "Instructor"):
+                instructors = list(map(str, Instructor.objects.all()))
+                tachoices = list(map(str, TA.objects.all()))
+                return render(request, "courses.html", {"instructors": instructors, "tachoices": tachoices})
+            else:
+                return render(request, "login.html", {"message": "unauthorized access"})
 
     def post(self, request):
         coursename = request.POST['name']
@@ -236,10 +236,10 @@ class CreateInstructor(View):
         loggedIn = request.session.get("name")
         if MyUser.objects.filter(name=loggedIn).exists():
             user = MyUser.objects.get(name=loggedIn)
-        if valid(user.role, "Admin") or valid(user.role, "Instructor"):
-            return render(request, "instructors.html", {})
-        else:
-            return render(request, "login.html", {"message": "unauthorized access"})
+            if valid(user.role, "Admin") or valid(user.role, "Instructor"):
+                return render(request, "instructors.html", {})
+            else:
+                return render(request, "login.html", {"message": "unauthorized access"})
 
     def post(self, request):
         loggedIn = request.session["name"]
