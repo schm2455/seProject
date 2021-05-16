@@ -147,7 +147,7 @@ class DeleteCourse(View):
 
         if valid(user.role, "Admin") or valid(user.role, "Instructor"):
             courses = list(map(str, Course.objects.all()))
-            return render(request, "assign_TAs.html", {"courses": courses})
+            return render(request, "deletecourse.html", {"courses": courses})
         else:
             return render(request, "login.html", {"message": "unauthorized access"})
 
@@ -156,12 +156,12 @@ class DeleteCourse(View):
 
         if course == "Select...":
             messages.error(request, 'Please fill all the boxes')
-            return redirect('/assign_TAs/')
-        selectedCourse = Course.objects.get(course)
+            return redirect('/deletecourse/')
+        selectedcourse = Course.objects.get(name=course)
         user = MyUser.objects.get(name=request.session.get("name"))
         if direct(user.role) is not None:
-            selectedCourse.delete()
-            messages.success(request, 'Successfully assigned TA to Lab')
+            selectedcourse.delete()
+            messages.success(request, 'Successfully deleted course')
             return redirect(direct(user.role).url)
         else:
             return redirect('login.html', {"message": "unauthorized access"})

@@ -23,19 +23,7 @@
                         {% endfor %}
 
                     </select>
-                            <p>Lab Name:<input type="text" name="lab" style="display:inline">
-                </p>
-                <p>
-                    <label for="tachoice">TA:</label>
-                    <select id="tachoice" name="tachoice">
-                    <option value="Select..." >Select...</option>
-                        {% for i in tachoices %}
-                            <option value="{{ i }}">{{ i }}</option>
-                        {% endfor %}
 
-                    </select>
-                    </input>
-                </p>
                 <input type="submit">
             </form>
           <form action='/go_back/' method="get">
