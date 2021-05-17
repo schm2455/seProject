@@ -148,13 +148,17 @@ class EditCourse(View):
         tachoice = TA.objects.get(name=taname)
 
         user = MyUser.objects.get(name=request.session.get("name", False))
-
-        Course.objects.update(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
-        if direct(user.role) is not None:
-            messages.success(request, "Success")
-            return redirect(direct(user.role).url)
+        courses = list(Course.objects.all())
+        if courses.__str__().__contains__(coursename):
+            messages.error(request, "Duplicate course name entered.")
+            return redirect("/editcourse/")
         else:
-            return redirect("login.html", {"message": "unauthorized access"})
+            Course.objects.update(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
+            if direct(user.role) is not None:
+                messages.success(request, "Success")
+                return redirect(direct(user.role).url)
+            else:
+                return redirect("login.html", {"message": "unauthorized access"})
 
 
 class DeleteCourse(View):
