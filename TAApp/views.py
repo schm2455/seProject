@@ -140,6 +140,7 @@ class EditCourse(View):
 
     def post(self, request):
         coursename = request.POST['name']
+        oldcoursename = request.POST['coursenamechoice']
         instructorname = request.POST['instructorchoice']
         taname = request.POST['tachoice']
         desc = request.POST['description']
@@ -149,11 +150,11 @@ class EditCourse(View):
 
         user = MyUser.objects.get(name=request.session.get("name", False))
         courses = list(Course.objects.all())
-        if courses.__str__().__contains__(coursename):
+        if (courses.__str__().__contains__(coursename)) & (oldcoursename != coursename):
             messages.error(request, "Duplicate course name entered.")
             return redirect("/editcourse/")
         else:
-            Course.objects.update(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
+            Course.objects.filter(name=oldcoursename).update(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
             if direct(user.role) is not None:
                 messages.success(request, "Success")
                 return redirect(direct(user.role).url)
