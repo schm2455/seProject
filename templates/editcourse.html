@@ -13,7 +13,7 @@
     <div class="bg">
         <div style="padding-top:170px;margin:0 auto;text-align: center;">
             <header style="font-size:40px;color:black">Edit A Course</header>
-            <form action="/courses/" method="post">
+            <form action="/editcourse/" method="post">
                 {% csrf_token %}
                 <p>
                     <label for="coursenamechoice">Course Name:</label>
@@ -61,7 +61,7 @@
 
 <script>
     window.onload=function(){
-        document.getElementById("editcoursecoursenamebox").value="this stuff works";
+        document.getElementById("editcoursecoursenamebox").value=" ";
     }
     function ChangeSelectedCourse(){
         var nametomatch = document.getElementById("coursenamechoice").value;

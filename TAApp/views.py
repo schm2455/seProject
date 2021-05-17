@@ -54,7 +54,7 @@ class Admin_home(View):
                 InstructorList = list(map(str, Instructor.objects.all()))
                 CourseList = list(Course.objects.all())
                 return render(request, "admin_home.html",
-                            {"TAs": TAList, "instructors": InstructorList, "courses": CourseList})
+                              {"TAs": TAList, "instructors": InstructorList, "courses": CourseList})
             else:
                 return render(request, "login.html", {"message": "unauthorized access"})
 
@@ -138,13 +138,30 @@ class EditCourse(View):
         else:
             return render(request, "login.html", {"message": "unauthorized access"})
 
+    def post(self, request):
+        coursename = request.POST['name']
+        instructorname = request.POST['instructorchoice']
+        taname = request.POST['tachoice']
+        desc = request.POST['description']
+
+        instructorchoice = Instructor.objects.get(name=instructorname)
+        tachoice = TA.objects.get(name=taname)
+
+        user = MyUser.objects.get(name=request.session.get("name", False))
+
+        Course.objects.update(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
+        if direct(user.role) is not None:
+            messages.success(request, "Success")
+            return redirect(direct(user.role).url)
+        else:
+            return redirect("login.html", {"message": "unauthorized access"})
+
 
 class DeleteCourse(View):
     def get(self, request):
         loggedIn = request.session.get("name")
         if MyUser.objects.filter(name=loggedIn).exists():
             user = MyUser.objects.get(name=loggedIn)
-
         if valid(user.role, "Admin") or valid(user.role, "Instructor"):
             courses = list(map(str, Course.objects.all()))
             return render(request, "deletecourse.html", {"courses": courses})
@@ -208,9 +225,9 @@ class TA_home(View):
         loggedIn = request.session.get("name")
         if MyUser.objects.filter(name=loggedIn).exists():
             user = MyUser.objects.get(name=loggedIn)
-        lablist = list(Lab.objects.filter(labTA = TA.objects.get(name = loggedIn)))
+        lablist = list(Lab.objects.filter(labTA=TA.objects.get(name=loggedIn)))
         if valid(user.role, "TA"):
-            return render(request, "TA_home.html", {'labs':lablist})
+            return render(request, "TA_home.html", {'labs': lablist})
         else:
             return render(request, "login.html", {"message": "unauthorized access"})
 
@@ -293,11 +310,12 @@ class Assign_TAs(View):
             messages.error(request, 'Please fill all the boxes')
             return redirect('/assign_TAs/')
 
-        thislab = Lab.objects.create(name=labname, labTA=TA.objects.get(name=ta), labForCourse=Course.objects.get(name=course))
+        thislab = Lab.objects.create(name=labname, labTA=TA.objects.get(name=ta),
+                                     labForCourse=Course.objects.get(name=course))
 
         user = MyUser.objects.get(name=request.session.get("name"))
         if direct(user.role) is not None:
-            messages.success(request, 'Successfully assigned TA to Lab' )
+            messages.success(request, 'Successfully assigned TA to Lab')
             return redirect(direct(user.role).url)
         else:
             return redirect('login.html', {"message": "unauthorized access"})
