@@ -16,7 +16,7 @@
 <a href="/login/">Logout</a>
     <br/>
     <br/>
-  <div class="column_left">
+  <div class="column_left" style="width:50%">
       <div class="Left">
       <div class="left">
       <h2>TA's:</h2>
@@ -41,7 +41,7 @@
   </div>
   </div>
   </div>
-  <div class="column_center">
+  <div class="column_center" style="width:50%">
         <div class="Left">
             <h2>Courses:</h2>
       <form action="/instructor_home/"  id = "Courses" method="post">
@@ -56,32 +56,9 @@
 
 </form>
 
-        <form action ="/courses/">
-          <input type="submit" value="Add">
-        </form>
   </div>
   </div>
-  <div class="column_right">
-            <h2>Instructors:</h2>
-      <form action="/instructor_home/"  id = "Instructors" method="post">
-    {% csrf_token %}
-      <div id="InstructorList">
-    {% for i in instructors %}
-    {{ i }}<br/>
-    {% endfor %}
-      </div>
-</form>
-              <form action ="/instructors/">
-          <input type="submit" value="Add">
-        </form>
-   <div class ="center">
-        {% if messages %}
-            {% for i in messages %}
-            {{ i }}
-            {% endfor %}
-        {% endif %}
-        </div>
-</div>
+
 </div>
 </body>
 </html>
