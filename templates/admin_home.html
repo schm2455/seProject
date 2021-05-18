@@ -45,7 +45,7 @@
     {% csrf_token %}
       <div id="CourseList">
     {% for course in courses %}
-    {{ course.name }}<br/>
+        <a href='/thiscourse/?name={{ course.name }}'>{{ course.name }}</a><br/>
     {% endfor %}
       </div>
 
