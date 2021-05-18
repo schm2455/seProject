@@ -1,0 +1,49 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}"/>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Assignment</title>
+</head>
+<body>
+    <div class="bg">
+        <div style="padding-top:170px;margin:0 auto;text-align: center;">
+            <header style="font-size:40px;color:black">Create an Assignment</header>
+            <form action="/createassignment/" method="post">
+                {% csrf_token %}
+                <p>Assignment:<input type="text" name="name" style="display:inline">
+                <p>
+                    <label for="tachoice">TA:</label>
+                    <select id="tachoice" name="tachoice">
+                    <option value="Select...">Select...</option>
+                        {% for i in tachoices %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+
+                    </select>
+                <p style="margin-bottom:0">Description</p>
+                <p style="margin-top:0"><textarea name="assignment" style="width:500px;height:100px;margin-top:0px"></textarea></p>
+
+                <input type="submit">
+
+            </form>
+          <form action='/go_back/' method="get">
+            {% csrf_token %}
+             <input type="submit" value="Go back">
+        </form>
+            <div class ="center">
+        {% if messages %}
+            {% for i in messages %}
+            {{ i }}
+            {% endfor %}
+        {% endif %}
+        </form>
+        </div>
+
+    </div>
+</body>
+</html>
