@@ -16,18 +16,18 @@
 <a href="/login/">Logout</a>
     <br/>
     <br/>
-  <div class="column_left">
-      <div class="Left">
+  <div class="column_left" style="width:50%">
       <div class="left">
+      <div class="Left">
       <h2>TA's:</h2>
       <form action="/instructor_home/"  id = "TAs" method="post">
-    {% csrf_token %}
-      <div id="TAList">
-    {% for i in TAs %}
-    {{ i }}<br/>
-    {% endfor %}
-      </div>
-</form>
+      {% csrf_token %}
+        <div id="TAList">
+            {% for i in TAs %}
+            {{ i }}<br/>
+            {% endfor %}
+        </div>
+      </form>
         <form action ="/TAs/">
           <input type="submit" value="Add">
         </form>
@@ -35,50 +35,24 @@
           <form action ="/assign_TAs/">
               <input type="submit" value="Assign TAs">
           </form>
+        </div>
+    </div>
   </div>
-  </div>
-  </div>
-  <div class="column_center">
+  <div class="column_right" style="width:50%">
         <div class="Left">
             <h2>Courses:</h2>
       <form action="/instructor_home/"  id = "Courses" method="post">
     {% csrf_token %}
       <div id="CourseList">
-      <div id="teacher">
-    {% for i in courses %}
-        {{ i.name }}<br/>
-    {% endfor %}
+          <div id="teacher">
+         {% for i in courses %}
+            {{ i.name }}<br/>
+         {% endfor %}
+          </div>
       </div>
-      </div>
-
-</form>
-
-        <form action ="/courses/">
-          <input type="submit" value="Add">
-        </form>
+      </form>
   </div>
   </div>
-  <div class="column_right">
-            <h2>Instructors:</h2>
-      <form action="/instructor_home/"  id = "Instructors" method="post">
-    {% csrf_token %}
-      <div id="InstructorList">
-    {% for i in instructors %}
-    {{ i }}<br/>
-    {% endfor %}
-      </div>
-</form>
-              <form action ="/instructors/">
-          <input type="submit" value="Add">
-        </form>
-   <div class ="center">
-        {% if messages %}
-            {% for i in messages %}
-            {{ i }}
-            {% endfor %}
-        {% endif %}
-        </div>
-</div>
 </div>
 </body>
 </html>
