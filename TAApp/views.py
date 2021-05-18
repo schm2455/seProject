@@ -253,7 +253,7 @@ class TA_home(View):
 
 
 class Instructor_home(View):
-    def get(self, request, ):
+    def get(self, request):
         loggedIn = request.session.get("name")
         if MyUser.objects.filter(name=loggedIn).exists():
             user = MyUser.objects.get(name=loggedIn)
