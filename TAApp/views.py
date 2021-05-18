@@ -113,24 +113,18 @@ class Register(View):
         newUser = request.POST['name']
         newUserPass = request.POST['password']
         userWork = request.POST['job']
-        loggedIn = request.session.get("name")
-        user = MyUser.objects.get(name=loggedIn)
-        if valid(user.role, "Admin"):
-            if not MyUser.objects.filter(name=request.POST['name']).exists():
-                if userWork != 'Select...':
-                    MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
+        if userWork != 'Select...':
+            MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
 
-                    if userWork == "Instructor":
-                        Instructor.objects.create(name=newUser)
-                    elif userWork == "TA":
-                        TA.objects.create(name=newUser)
-                    else:
-                        return render(request, "register.html", {"message": "Please try again!"})
-                else:
-                    return render(request, "register.html", {"message": "Duplicate user"})
-            return redirect("/admin_home/", {"message": "Success!"})
+            if userWork == "Instructor":
+                Instructor.objects.create(name=newUser)
+            elif userWork == "TA":
+                TA.objects.create(name=newUser)
+            else:
+                    return render(request, "register.html", {"message": "Please try again!"})
         else:
-            return redirect("login.html", {"message": "unauthorized access"})
+            return render(request, "register.html", {"message": "Duplicate user"})
+        return redirect("/admin_home/", {"message": "Success!"})
 
 
 class EditCourse(View):

@@ -49,7 +49,7 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Lab(models.Model):
     name = models.CharField(max_length=20, null=True)
@@ -58,7 +58,8 @@ class Lab(models.Model):
     labTA = models.ForeignKey(TA, on_delete=models.CASCADE, default="")
     labForCourse = models.ForeignKey(Course, on_delete=models.CASCADE, default="")
 
+
 class Assignment(models.Model):
-    name = models.CharField(max_length=20, null = True)
-    description = models.CharField(max_length=50, null = True)
+    name = models.CharField(max_length=20, null=True)
+    description = models.CharField(max_length=50, null=True)
     instructorTA = models.ForeignKey(TA, on_delete=models.CASCADE, default="")
