@@ -107,19 +107,25 @@ class Register(View):
         newUser = request.POST['name']
         newUserPass = request.POST['password']
         userWork = request.POST['job']
-        if not MyUser.objects.filter(name=request.POST['name']).exists():
-            if userWork != 'Select...':
-                MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
+        loggedIn = request.session.get("name")
+        if MyUser.objects.filter(name=loggedIn).exists():
+            user = MyUser.objects.get(name=loggedIn)
+            if valid(user.role, "Admin") or valid(user.role, "Instructor"):
+                if not MyUser.objects.filter(name=request.POST['name']).exists():
+                    if userWork != 'Select...':
+                        MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
 
-                if userWork == "Instructor":
-                    Instructor.objects.create(name=newUser)
-                elif userWork == "TA":
-                    TA.objects.create(name=newUser)
-            else:
-                return render(request, "register.html", {"message": "Please try again!"})
+                        if userWork == "Instructor":
+                            Instructor.objects.create(name=newUser)
+                        elif userWork == "TA":
+                            TA.objects.create(name=newUser)
+                        else:
+                            return render(request, "register.html", {"message": "Please try again!"})
+                    else:
+                        return render(request, "register.html", {"message": "Duplicate user"})
+            return redirect("/admin_home/", {"message": "Success!"})
         else:
-            return render(request, "register.html", {"message": "Duplicate user"})
-        return render(request, "login.html", {"message": "Success!"})
+            return redirect("login.html", {"message": "unauthorized access"})
 
 
 class EditCourse(View):
