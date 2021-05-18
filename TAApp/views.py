@@ -85,8 +85,12 @@ class Courses(View):
         tachoice = TA.objects.get(name=taname)
 
         user = MyUser.objects.get(name=request.session.get("name", False))
-
-        Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
+        courses = list(Course.objects.all())
+        if courses.__str__().__contains__(coursename):
+            messages.error(request, "Duplicate course name entered.")
+            return redirect("/editcourse/")
+        else:
+            Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
 
         if direct(user.role) is not None:
             messages.success(request, "Success")
@@ -146,7 +150,7 @@ class EditCourse(View):
         desc = request.POST['description']
 
         if instructorname == 'Select...' or taname == 'Select...' or desc == '' or coursename == '':
-            messages.error(request, "Please fill all the boxes")
+            messages.error(request, "Duplicate course name entered.")
             return redirect("/editcourse/")
 
         instructorchoice = Instructor.objects.get(name=instructorname)
