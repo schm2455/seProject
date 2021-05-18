@@ -7,7 +7,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Edit Course</title>
 </head>
 <body>
     <div class="bg">
@@ -49,12 +49,18 @@
 
                 <input type="submit">
             </form>
-        <div class ="center">{{ message }}</div>
-        <form>
-            <input type="button" value="Go back" onclick="history.back()">
+                  <form action='/go_back/' method="get">
+            {% csrf_token %}
+             <input type="submit" value="Go back">
         </form>
+                <div class ="center">
+        {% if messages %}
+            {% for i in messages %}
+            {{ i }}
+            {% endfor %}
+        {% endif %}
         </div>
-
+        </div>
     </div>
 </body>
 </html>
