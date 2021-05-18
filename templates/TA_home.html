@@ -35,7 +35,7 @@
     {% csrf_token %}
       <div id="AssignmentList">
     {% for i in Assignments %}
-    {{ i }}<br/>
+    {{ i.name }}<br/>
     {% endfor %}
       </div>
 </form>

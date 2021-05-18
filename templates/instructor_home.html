@@ -35,6 +35,9 @@
           <form action ="/assign_TAs/">
               <input type="submit" value="Assign TAs">
           </form>
+      <form action ="/createassignment/">
+              <input type="submit" value="Assign an assignment">
+          </form>
   </div>
   </div>
   </div>
@@ -46,7 +49,7 @@
       <div id="CourseList">
       <div id="teacher">
     {% for i in courses %}
-        {{ i.name }}<br/>
+        <a href="/thiscourse/?name={{ i.name }}">  {{ i.name }}</a><br/>
     {% endfor %}
       </div>
       </div>

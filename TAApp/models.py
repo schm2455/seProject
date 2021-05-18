@@ -57,3 +57,8 @@ class Lab(models.Model):
     project_manager = models.ForeignKey(Instructor, on_delete=models.CASCADE, null=True, blank=True, default="")
     labTA = models.ForeignKey(TA, on_delete=models.CASCADE, default="")
     labForCourse = models.ForeignKey(Course, on_delete=models.CASCADE, default="")
+
+class Assignment(models.Model):
+    name = models.CharField(max_length=20, null = True)
+    description = models.CharField(max_length=50, null = True)
+    instructorTA = models.ForeignKey(TA, on_delete=models.CASCADE, default="")

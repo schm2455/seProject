@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views import View
-from TAApp.models import MyUser, Administrator, Instructor, TA, Course, Lab
+from TAApp.models import MyUser, Administrator, Instructor, TA, Course, Lab, Assignment
 from django.core import serializers
 
 
@@ -152,14 +152,14 @@ class EditCourse(View):
         instructorchoice = Instructor.objects.get(name=instructorname)
         tachoice = TA.objects.get(name=taname)
 
-
         user = MyUser.objects.get(name=request.session.get("name", False))
         courses = list(Course.objects.all())
         if (courses.__str__().__contains__(coursename)) & (oldcoursename != coursename):
             messages.error(request, "Duplicate course name entered.")
             return redirect("/editcourse/")
         else:
-            Course.objects.filter(name=oldcoursename).update(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
+            Course.objects.filter(name=oldcoursename).update(name=coursename, description=desc,
+                                                             instructor=instructorchoice, instructorTA=tachoice)
             if direct(user.role) is not None:
                 messages.success(request, "Success")
                 return redirect(direct(user.role).url)
@@ -236,8 +236,9 @@ class TA_home(View):
         if MyUser.objects.filter(name=loggedIn).exists():
             user = MyUser.objects.get(name=loggedIn)
         lablist = list(Lab.objects.filter(labTA=TA.objects.get(name=loggedIn)))
+        assignments = Assignment.objects.filter(instructorTA=TA.objects.get(name = user))
         if valid(user.role, "TA"):
-            return render(request, "TA_home.html", {'labs': lablist})
+            return render(request, "TA_home.html", {'labs': lablist, 'Assignments': assignments})
         else:
             return render(request, "login.html", {"message": "unauthorized access"})
 
@@ -338,3 +339,31 @@ class Go_Back(View):
             return redirect(direct(user.role).url)
         else:
             return redirect('login.html', {"message": "unauthorized access"})
+
+
+class makeassignment(View):
+    def get(self, request):
+        talist = list(TA.objects.all())
+        return render(request, 'createassignment.html', {'tachoices': talist})
+
+    def post(self, request):
+        user = MyUser.objects.get(name=request.session.get("name"))
+        tachoice = request.POST['tachoice']
+        assignment = request.POST['assignment']
+        name = request.POST['name']
+
+        Assignment.objects.create(name=name, instructorTA=TA.objects.get(name=tachoice), description=assignment)
+
+        messages.success(request, "Success")
+        if direct(user.role) is not None:
+            return redirect(direct(user.role).url)
+        else:
+            return redirect('login.html', {"message": "unauthorized access"})
+
+class thisCourse(View):
+    def get(self,request):
+        coursename = request.GET.get('name')
+        thiscourse = Course.objects.get(name = coursename)
+
+        return render(request, 'thiscourse.html', {'inst' :str(thiscourse.instructor), 'tadude': str(thiscourse.instructorTA), 'desc': thiscourse.description, 'name': str(thiscourse.name)  })
+
