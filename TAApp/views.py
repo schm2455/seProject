@@ -85,8 +85,12 @@ class Courses(View):
         tachoice = TA.objects.get(name=taname)
 
         user = MyUser.objects.get(name=request.session.get("name", False))
-
-        Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
+        courses = list(Course.objects.all())
+        if courses.__str__().__contains__(coursename):
+            messages.error(request, "Duplicate course name entered.")
+            return redirect("/editcourse/")
+        else:
+            Course.objects.create(name=coursename, description=desc, instructor=instructorchoice, instructorTA=tachoice)
 
         if direct(user.role) is not None:
             messages.success(request, "Success")
@@ -97,25 +101,36 @@ class Courses(View):
 
 class Register(View):
     def get(self, request):
-        return render(request, "register.html", {})
+        loggedIn = request.session.get("name")
+        if MyUser.objects.filter(name=loggedIn).exists():
+            user = MyUser.objects.get(name=loggedIn)
+            if valid(user.role, "Admin"):
+                return render(request, "register.html", {})
+            else:
+                return render(request, "login.html", {"message": "unauthorized access"})
 
     def post(self, request):
         newUser = request.POST['name']
         newUserPass = request.POST['password']
         userWork = request.POST['job']
-        if not MyUser.objects.filter(name=request.POST['name']).exists():
-            if userWork != 'Select...':
-                MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
+        loggedIn = request.session.get("name")
+        user = MyUser.objects.get(name=loggedIn)
+        if valid(user.role, "Admin"):
+            if not MyUser.objects.filter(name=request.POST['name']).exists():
+                if userWork != 'Select...':
+                    MyUser.objects.create(name=newUser, password=newUserPass, role=userWork)
 
-                if userWork == "Instructor":
-                    Instructor.objects.create(name=newUser)
-                elif userWork == "TA":
-                    TA.objects.create(name=newUser)
-            else:
-                return render(request, "register.html", {"message": "Please try again!"})
+                    if userWork == "Instructor":
+                        Instructor.objects.create(name=newUser)
+                    elif userWork == "TA":
+                        TA.objects.create(name=newUser)
+                    else:
+                        return render(request, "register.html", {"message": "Please try again!"})
+                else:
+                    return render(request, "register.html", {"message": "Duplicate user"})
+            return redirect("/admin_home/", {"message": "Success!"})
         else:
-            return render(request, "register.html", {"message": "Duplicate user"})
-        return render(request, "login.html", {"message": "Success!"})
+            return redirect("login.html", {"message": "unauthorized access"})
 
 
 class EditCourse(View):
@@ -146,7 +161,7 @@ class EditCourse(View):
         desc = request.POST['description']
 
         if instructorname == 'Select...' or taname == 'Select...' or desc == '' or coursename == '':
-            messages.error(request, "Please fill all the boxes")
+            messages.error(request, "Duplicate course name entered.")
             return redirect("/editcourse/")
 
         instructorchoice = Instructor.objects.get(name=instructorname)
