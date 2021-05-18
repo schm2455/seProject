@@ -145,8 +145,13 @@ class EditCourse(View):
         taname = request.POST['tachoice']
         desc = request.POST['description']
 
+        if instructorname == 'Select...' or taname == 'Select...' or desc == '' or coursename == '':
+            messages.error(request, "Please fill all the boxes")
+            return redirect("/editcourse/")
+
         instructorchoice = Instructor.objects.get(name=instructorname)
         tachoice = TA.objects.get(name=taname)
+
 
         user = MyUser.objects.get(name=request.session.get("name", False))
         courses = list(Course.objects.all())
