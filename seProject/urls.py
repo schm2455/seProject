@@ -33,8 +33,8 @@ urlpatterns = [
     path('instructor_home/', Instructor_home.as_view(), name='instructor_home'),
     path('assign_TAs/', Assign_TAs.as_view(), name='assign_TA'),
     path('go_back/', Go_Back.as_view(), name='go_back'),
-    path('deletecourse/', DeleteCourse.as_view()),
-    path('createassignment/', makeassignment.as_view()),
-    path('thiscourse/', thisCourse.as_view()),
+    path('deletecourse/', DeleteCourse.as_view(), name='delete_course'),
+    path('createassignment/', makeassignment.as_view(), name='make_assignment'),
+    path('thiscourse/', thisCourse.as_view(), name='this_course'),
 
 ]

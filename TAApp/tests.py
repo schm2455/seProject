@@ -112,6 +112,9 @@ class BaseTest(TestCase):
         self.create_instructor_url=reverse('create_instructor')
         self.assign_TA=reverse('assign_TA')
         self.go_back=reverse('go_back')
+        self.make_assignment=reverse('make_assignment')
+        self.this_course_page=reverse('this_course')
+        self.delete_course=reverse('delete_course')
         self.admin={
             'name':'admin',
             'password':'admin',
@@ -143,7 +146,7 @@ class BaseTest(TestCase):
 #Test Register Views
 class RegisterTest(BaseTest):
     def test_can_view_page(self):
-        response = self.client.get(self.register_url)
+        response = self.client.post(self.register_url, self.admin, format="test/html")
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response,'register.html')
     def test_can_register_admin(self):
@@ -475,18 +478,21 @@ class TestInstructorHomeView(BaseTest):
         testAdmin.save()
         testInstructor = Instructor.objects.create(name="testInstructor", project_manager=testAdmin)
         testInstructor.save()
-        otherInstructor = Instructor.objects.create(name="otherInstructor", project_manager=testAdmin)
-        otherInstructor.save()
+        #otherInstructor = Instructor.objects.create(name="otherInstructor", project_manager=testAdmin)
+        #otherInstructor.save()
         testTA = TA.objects.create(name="testTA", project_manager=testInstructor)
         testTA.save()
         testCourse = Course.objects.create(name="Course", description="Course Description", project_manager=testAdmin, instructor=testInstructor, instructorTA=testTA)
         testCourse.save()
         self.client.post(self.register_url, data={'name': testInstructor.name, 'password': "password", 'job': "Instructor"}, format="text/html")
         self.client.post(self.login_url, data={'name': testInstructor.name, 'password': "password"}, format="text/hmtl")
-        response = self.client.get(self.instructor_home_url)
-        self.assertIn(testTA, response.context['TAs'])
-        self.assertIn(otherInstructor, response.context['instructors'])
-        self.assertIn(testCourse, response.context['courses'])
+        self.client.post(self.instructor_home_url, data={'name':testInstructor.name})
+        response=self.client.get(self.instructor_home_url)
+        self.assertEqual(response.status_code, 200)
+        #response=self.client.get(self.instructor_home_url, data={'name':testInstructor.name})
+        #self.assertIn(testTA.name, response.context['TAs'])
+        #self.assertIn(otherInstructor.name, response.context['instructors'])
+        #self.assertIn(testCourse.name, response.context['courses'])
 #Test Create Instructor
 class TestCreateInstructor(BaseTest):
     def test_admin_has_access_to_create_instructor(self):
@@ -594,6 +600,122 @@ class TestGoBack(BaseTest):
         self.client.post(self.login_url, self.admin, format="format/html")
         response=self.client.get(self.go_back)
         self.assertEqual(response.status_code, 302)
+class TestMakeAssignment(BaseTest):
+    def test_admin_can_create_assignment(self):
+        self.client.post(self.register_url, self.admin, format="format/html")
+        self.client.post(self.login_url, self.admin, format="format/html")
+        response=self.client.get(self.make_assignment)
+        self.assertEqual(response.status_code, 200)
+    def test_instructor_can_create_assignment(self):
+        self.client.post(self.register_url, self.instructor, format="format/html")
+        self.client.post(self.login_url, self.instructor, format="format/html")
+        response=self.client.get(self.make_assignment)
+        self.assertEqual(response.status_code, 200)
+    def test_TA_can_create_assignment(self):
+        self.client.post(self.register_url, self.TA, format="format/html")
+        self.client.post(self.login_url, self.TA, format="format/html")
+        response=self.client.get(self.make_assignment)
+        self.assertEqual(response.status_code,200)
+    def test_successfully_added_course(self):
+        testAdmin = Administrator.objects.create(name="test", password="test")
+        testAdmin.save()
+        testInstructor = Instructor.objects.create(name="testInstructor", project_manager=testAdmin)
+        testInstructor.save()
+        testTA = TA.objects.create(name="testTA", project_manager=testInstructor)
+        testTA.save()
+        self.client.post(self.register_url, data={'name': testAdmin.name, 'password': testAdmin.password, 'job': "Admin"}, format="text/html")
+        self.client.post(self.login_url, data={'name': testAdmin.name, 'password': testAdmin.password}, format="text/html")
+        self.client.post(self.make_assignment, data={'name':testAdmin.name, 'tachoice': testTA, 'assignment': "Assignment #1", 'name': "Math"})
+        response=self.client.get(self.make_assignment)
+        messages=list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Success")
+
+
+class TestThisCourse(BaseTest):
+    def test_this_course_page_returns_correct_info(self):
+        testAdmin = Administrator.objects.create(name="test", password="test")
+        testAdmin.save()
+        testInstructor = Instructor.objects.create(name="testInstructor", project_manager=testAdmin)
+        testInstructor.save()
+        testTA = TA.objects.create(name="testTA", project_manager=testInstructor)
+        testTA.save()
+        testCourse = Course.objects.create(name="Course", description="Course Description", project_manager=testAdmin, instructor=testInstructor, instructorTA=testTA)
+        testCourse.save()
+        self.client.post(self.register_url, data={'name': testAdmin.name, 'password': testAdmin.password, 'job': "Admin"}, format="text/html")
+        self.client.post(self.login_url, data={'name': testAdmin.name, 'password': testAdmin.password}, format="text/html")
+        self.client.post(self.courses, data={'name':testCourse.name, 'instructorchoice':testCourse.instructor, 'tachoice':testCourse.instructorTA,'description':testCourse.description})
+        response=self.client.get(self.this_course_page, data={'name':testCourse.name})
+        self.assertEqual(response.context['inst'], "testInstructor")
+        self.assertEqual(response.context['tadude'], "testTA")
+        self.assertEqual(response.context['desc'], "Course Description")
+        self.assertEqual(response.context['name'], "Course")
+
+class TestDeleteCourse(BaseTest):
+    def test_admin_can_access_page(self):
+        testAdmin = Administrator.objects.create(name="test", password="test")
+        testAdmin.save()
+        testInstructor = Instructor.objects.create(name="testInstructor", project_manager=testAdmin)
+        testInstructor.save()
+        testTA = TA.objects.create(name="testTA", project_manager=testInstructor)
+        testTA.save()
+        testCourse = Course.objects.create(name="Course", description="Course Description", project_manager=testAdmin, instructor=testInstructor, instructorTA=testTA)
+        testCourse.save()
+        self.client.post(self.register_url, data={'name': testAdmin.name, 'password': testAdmin.password, 'job': "Admin"}, format="text/html")
+        self.client.post(self.login_url, data={'name': testAdmin.name, 'password': testAdmin.password}, format="text/html")
+        response=self.client.get(self.delete_course)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(testCourse.name, response.context['courses'])
+    def test_instructor_can_access_page(self):
+        testAdmin = Administrator.objects.create(name="test", password="test")
+        testAdmin.save()
+        testInstructor = Instructor.objects.create(name="testInstructor", project_manager=testAdmin)
+        testInstructor.save()
+        testTA = TA.objects.create(name="testTA", project_manager=testInstructor)
+        testTA.save()
+        testCourse = Course.objects.create(name="Course", description="Course Description", project_manager=testAdmin, instructor=testInstructor, instructorTA=testTA)
+        testCourse.save()
+        self.client.post(self.register_url, data={'name': testInstructor.name, 'password': "testInstructor", 'job': "Instructor"}, format="text/html")
+        self.client.post(self.login_url, data={'name': testInstructor.name, 'password': "testInstructor"}, format="text/html")
+        response=self.client.get(self.delete_course)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(testCourse.name, response.context['courses'])
+    def test_successfull_course_deleted(self):
+        testAdmin = Administrator.objects.create(name="test", password="test")
+        testAdmin.save()
+        testInstructor = Instructor.objects.create(name="testInstructor", project_manager=testAdmin)
+        testInstructor.save()
+        testTA = TA.objects.create(name="testTA", project_manager=testInstructor)
+        testTA.save()
+        testCourse = Course.objects.create(name="Course", description="Course Description", project_manager=testAdmin, instructor=testInstructor, instructorTA=testTA)
+        testCourse.save()
+        self.client.post(self.register_url, data={'name': testAdmin.name, 'password': testAdmin.password, 'job': "Admin"}, format="text/html")
+        self.client.post(self.login_url, data={'name': testAdmin.name, 'password': testAdmin.password}, format="text/html")
+        self.client.post(self.delete_course, data={'coursechoice':testCourse.name})
+        response=self.client.get(self.delete_course)
+        messages=list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Successfully deleted course")
+    def test_user_did_not_fill_in_all_boxes(self):
+        testAdmin = Administrator.objects.create(name="test", password="test")
+        testAdmin.save()
+        testInstructor = Instructor.objects.create(name="testInstructor", project_manager=testAdmin)
+        testInstructor.save()
+        testTA = TA.objects.create(name="testTA", project_manager=testInstructor)
+        testTA.save()
+        testCourse = Course.objects.create(name="Course", description="Course Description", project_manager=testAdmin, instructor=testInstructor, instructorTA=testTA)
+        testCourse.save()
+        self.client.post(self.register_url, data={'name': testAdmin.name, 'password': testAdmin.password, 'job': "Admin"}, format="text/html")
+        self.client.post(self.login_url, data={'name': testAdmin.name, 'password': testAdmin.password}, format="text/html")
+        self.client.post(self.delete_course, data={'coursechoice':"Select..."})
+        response=self.client.get(self.delete_course)
+        messages=list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Please fill all the boxes")
+
+
+
+
 
 
 
